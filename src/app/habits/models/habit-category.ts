@@ -1,0 +1,1 @@
+export const habitCategories = ['Work', 'Personal Development', 'Health', 'Spirituality','Relationships']
