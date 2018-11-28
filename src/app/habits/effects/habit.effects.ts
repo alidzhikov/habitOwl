@@ -12,7 +12,8 @@ import {
 } from 'rxjs/operators';
 
 import { Habit } from '@howl/Habits/models/Habit';
-import { HabitsPageActions } from '@howl/habits/actions';
+import { HabitsPageActions, CollectionApiActions } from '@howl/habits/actions';
+import { HabitsHttpService } from '../services/habits-http.service';
 
 @Injectable()
 export class HabitEffects {
@@ -44,23 +45,25 @@ export class HabitEffects {
 //       })
 //     );
 
-    // @Effect()
-    // loadCollection$: Observable<Action> = this.actions$.pipe(
-    //   ofType(HabitsPageActions.HabitsPageActionTypes.LoadHabits),
-    //   switchMap(() =>
-    //     this.db.query('Habits').pipe(
-    //       toArray(),
-    //       map(
-    //         (Habits: Habit[]) => new CollectionApiActions.LoadHabitsSuccess(Habits)
-    //       ),
-    //       catchError(error =>
-    //         of(new CollectionApiActions.LoadHabitsFailure(error))
-    //       )
-    //     )
-    //   )
-    // );
+    @Effect()
+    loadCollection$: Observable<Action> = this.actions$.pipe(
+      ofType(HabitsPageActions.HabitsPageActionTypes.LoadHabits),
+      switchMap(() =>{
+        return this.habitsHttpService.fetchAllHabits().pipe(
+          map(
+            (habits: Habit[]) => {
+              console.log(habits);
+              return new CollectionApiActions.LoadHabitsSuccess(habits)}
+          ),
+          catchError(error =>
+            of(new CollectionApiActions.LoadHabitsFailure(error))
+          )
+        )
+          })
+    );
 
   constructor(
-    private actions$: Actions
+    private actions$: Actions,
+    private habitsHttpService: HabitsHttpService
   ) {}
 }

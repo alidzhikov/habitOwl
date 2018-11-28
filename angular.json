@@ -2,14 +2,13 @@
   "$schema":
     "./node_modules/@angular-devkit/core/src/workspace/workspace-schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
   "defaultProject": "habit-owl",
   "projects": {
     "habit-owl": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
-      "prefix": "bc",
+      "prefix": "howl",
       "schematics": {},
       "architect": {
         "build": {

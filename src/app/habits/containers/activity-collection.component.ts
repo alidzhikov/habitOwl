@@ -3,6 +3,7 @@ import { Habit } from "../models/habit";
 import { Observable, from } from "rxjs";
 import { Store, select } from "@ngrx/store";
 import * as fromHabits from '@howl/habits/reducers';
+import { HabitsPageActions } from '@howl/habits/actions';
 
 @Component({
     selector: 'howl-habits-list',
@@ -19,6 +20,6 @@ export class ActivityCollectionComponent implements OnInit{
     }
 
     ngOnInit(){
-        //this.store.dispatch(new )
+        this.store.dispatch(new HabitsPageActions.LoadHabits());
     }
 }

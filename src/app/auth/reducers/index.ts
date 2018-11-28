@@ -33,6 +33,7 @@ export const selectAuthStatusState = createSelector(
 );
 export const getUser = createSelector(selectAuthStatusState, fromAuth.getUser);
 export const getLoggedIn = createSelector(getUser, user => !!user);
+export const getToken = createSelector(getUser, user => user.token);
 
 export const selectLoginPageState = createSelector(
   selectAuthState,
