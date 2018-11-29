@@ -1,15 +1,12 @@
-import { Injectable } from '@angular/core';
-import { Database } from '@ngrx/db';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
-import { defer, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { Database } from "@ngrx/db";
+import { Actions, Effect, ofType } from "@ngrx/effects";
+import { Action } from "@ngrx/store";
+import { defer, Observable, of } from "rxjs";
+import { catchError, map, mergeMap, switchMap, toArray } from "rxjs/operators";
 
-import { Habit } from '@howl/Habits/models/Habit';
-import {
-  HabitsPageActions,
-  CollectionApiActions,
-} from '@howl/Habits/actions';
+import { Habit } from "@howl/habits/models/habit";
+import { HabitsPageActions, CollectionApiActions } from "@howl/habits/actions";
 
 @Injectable()
 export class CollectionEffects {
@@ -25,17 +22,17 @@ export class CollectionEffects {
    */
   @Effect({ dispatch: false })
   openDB$: Observable<any> = defer(() => {
-    return this.db.open('Habits_app');
+    return this.db.open("Habits_app");
   });
 
   @Effect()
   addHabitToCollection$: Observable<Action> = this.actions$.pipe(
     ofType<HabitsPageActions.AddHabit>(
-        HabitsPageActions.HabitsPageActionTypes.AddHabit
+      HabitsPageActions.HabitsPageActionTypes.AddHabit
     ),
     map(action => action.payload),
     mergeMap(Habit =>
-      this.db.insert('Habits', [Habit]).pipe(
+      this.db.insert("Habits", [Habit]).pipe(
         map(() => new CollectionApiActions.AddHabitSuccess(Habit)),
         catchError(() => of(new CollectionApiActions.AddHabitFailure(Habit)))
       )
@@ -45,11 +42,11 @@ export class CollectionEffects {
   @Effect()
   removeHabitFromCollection$: Observable<Action> = this.actions$.pipe(
     ofType<HabitsPageActions.RemoveHabit>(
-        HabitsPageActions.HabitsPageActionTypes.RemoveHabit
+      HabitsPageActions.HabitsPageActionTypes.RemoveHabit
     ),
     map(action => action.payload),
     mergeMap(Habit =>
-      this.db.executeWrite('Habits', 'delete', [Habit.id]).pipe(
+      this.db.executeWrite("Habits", "delete", [Habit.id]).pipe(
         map(() => new CollectionApiActions.RemoveHabitSuccess(Habit)),
         catchError(() => of(new CollectionApiActions.RemoveHabitFailure(Habit)))
       )

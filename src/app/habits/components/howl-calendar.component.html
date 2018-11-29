@@ -1,0 +1,25 @@
+  <mat-card class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>{{ habit?.name }}</mat-card-title>
+      <mat-card-subtitle>{{ habit?.comment }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+            <button mat-button 
+            *ngFor="let date of daysOfWeek"
+            [ngClass]="{'today-date': isToday(date) }"
+            >{{ date | date:'dd'}}</button>
+    </mat-card-content>
+  </mat-card>
+
+  <style>
+      .today-date{
+       
+        border: 1px solid green;
+      }
+      button{
+        border-radius: 50%;
+          width: 64px;
+          height: 64px;
+      }
+  </style>

@@ -1,41 +1,59 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { select, Store } from "@ngrx/store";
+import { Observable } from "rxjs";
 
-import * as AuthActions from '@howl/auth/actions/auth.actions';
-import * as fromAuth from '@howl/auth/reducers';
-import * as fromRoot from '@howl/reducers';
-import { LayoutActions } from '@howl/core/actions';
-import { User } from '@howl/auth/models/user';
+import * as AuthActions from "@howl/auth/actions/auth.actions";
+import * as fromAuth from "@howl/auth/reducers";
+import * as fromRoot from "@howl/reducers";
+import { LayoutActions } from "@howl/core/actions";
+import { User } from "@howl/auth/models/user";
 
 @Component({
-  selector: 'bc-app',
+  selector: "bc-app",
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <bc-layout>
       <bc-sidenav [open]="showSidenav$ | async" (closeMenu)="closeSidenav()">
-        <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/" icon="book" hint="View your book collection">
+        <bc-nav-item
+          (navigate)="closeSidenav()"
+          *ngIf="(loggedIn$ | async)"
+          routerLink="/"
+          icon="book"
+          hint="View your book collection"
+        >
           My Collection
         </bc-nav-item>
-        <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/books/find" icon="search" hint="Find your next book!">
+        <bc-nav-item
+          (navigate)="closeSidenav()"
+          *ngIf="(loggedIn$ | async)"
+          routerLink="/books/find"
+          icon="search"
+          hint="Find your next book!"
+        >
           Browse Books
         </bc-nav-item>
-        <bc-nav-item (navigate)="closeSidenav()" *ngIf="loggedIn$ | async" routerLink="/habits" icon="table_chart" hint="You are what you do repeatedly">
+        <bc-nav-item
+          (navigate)="closeSidenav()"
+          routerLink="/habits"
+          icon="table_chart"
+          hint="You are what you do repeatedly"
+          ><!-- *ngIf="loggedIn$ | async" -->
           Habits
         </bc-nav-item>
         <bc-nav-item (navigate)="closeSidenav()" *ngIf="!(loggedIn$ | async)">
           Sign In
         </bc-nav-item>
-        <bc-nav-item (navigate)="logout()" *ngIf="loggedIn$ | async">
+        <bc-nav-item (navigate)="logout()" *ngIf="(loggedIn$ | async)">
           Sign Out
         </bc-nav-item>
       </bc-sidenav>
       <bc-toolbar (openMenu)="openSidenav()">
-        Book Collection {{ (user | async ) ? 'of ' + (user | async ).email : null }}
+        Book Collection
+        {{ (user | async) ? "of " + (user | async).email : null }}
       </bc-toolbar>
       <router-outlet></router-outlet>
     </bc-layout>
-  `,
+  `
 })
 export class AppComponent {
   showSidenav$: Observable<boolean>;

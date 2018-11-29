@@ -1,13 +1,13 @@
-import { Action } from '@ngrx/store';
-import { Habit } from '@howl/Habits/models/Habit';
+import { Action } from "@ngrx/store";
+import { Habit } from "@howl/habits/models/habit";
 
 export enum CollectionApiActionTypes {
-  AddHabitSuccess = '[Collection/API] Add Habit Success',
-  AddHabitFailure = '[Collection/API] Add Habit Failure',
-  RemoveHabitSuccess = '[Collection/API] Remove Habit Success',
-  RemoveHabitFailure = '[Collection/API] Remove Habit Failure',
-  LoadHabitsSuccess = '[Collection/API] Load Habits Success',
-  LoadHabitsFailure = '[Collection/API] Load Habits Failure',
+  AddHabitSuccess = "[Collection/API] Add Habit Success",
+  AddHabitFailure = "[Collection/API] Add Habit Failure",
+  RemoveHabitSuccess = "[Collection/API] Remove Habit Success",
+  RemoveHabitFailure = "[Collection/API] Remove Habit Failure",
+  LoadHabitsSuccess = "[Collection/API] Load Habits Success",
+  LoadHabitsFailure = "[Collection/API] Load Habits Failure"
 }
 
 /**

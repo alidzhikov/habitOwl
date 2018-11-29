@@ -1,20 +1,21 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { StoreModule } from "@ngrx/store";
+import { EffectsModule } from "@ngrx/effects";
 
-import { ComponentsModule } from '@howl/books/components';
-import { HabitEffects } from '@howl/habits/effects/habit.effects';
-import { CollectionEffects } from '@howl/habits/effects/collection.effects';
+import { ComponentsModule } from "@howl/books/components";
+import { HabitEffects } from "@howl/habits/effects/habit.effects";
+import { CollectionEffects } from "@howl/habits/effects/collection.effects";
 
-import { MaterialModule } from '@howl/material';
+import { MaterialModule } from "@howl/material";
 
+import { reducers } from "@howl/habits/reducers";
+import { HabitsRoutingModule } from "@howl/habits/habits-routing.module";
 
-import { reducers } from '@howl/habits/reducers';
-import { HabitsRoutingModule } from '@howl/habits/habits-routing.module';
-
-import { ActivityCollectionComponent } from './containers/activity-collection.component';
-import { HabitsHttpService } from './services/habits-http.service';
+import { ActivityCollectionComponent } from "./containers/activity-collection.component";
+import { HabitsHttpService } from "./services/habits-http.service";
+import { HabitListComponent } from "./components/habit-list-item.component";
+import { HabitCalendarComponent } from "./components/habit-calendar.component";
 
 @NgModule({
   imports: [
@@ -29,7 +30,7 @@ import { HabitsHttpService } from './services/habits-http.service';
      * eagerly or lazily and will be dynamically added to
      * the existing state.
      */
-    StoreModule.forFeature('habits', reducers),
+    StoreModule.forFeature("habits", reducers),
 
     /**
      * Effects.forFeature is used to register effects
@@ -39,13 +40,13 @@ import { HabitsHttpService } from './services/habits-http.service';
      * All Effects will only be instantiated once regardless of
      * whether they are registered once or multiple times.
      */
-    EffectsModule.forFeature([HabitEffects, CollectionEffects]),
+    EffectsModule.forFeature([HabitEffects, CollectionEffects])
   ],
   declarations: [
-    ActivityCollectionComponent
+    ActivityCollectionComponent,
+    HabitListComponent,
+    HabitCalendarComponent
   ],
-  providers: [
-    HabitsHttpService
-  ]
+  providers: [HabitsHttpService]
 })
 export class HabitsModule {}
