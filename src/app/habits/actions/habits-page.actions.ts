@@ -50,4 +50,4 @@ export class RemoveHabit implements Action {
   constructor(public payload: Habit) {}
 }
 
-export type HabitsPageActionsUnion = AddHabit | EditHabit | RemoveHabit;
+export type HabitsPageActionsUnion = LoadHabits | AddHabit | AddHabits | EditHabit | RemoveHabit;

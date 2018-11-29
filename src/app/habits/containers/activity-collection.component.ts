@@ -63,10 +63,13 @@ export class ActivityCollectionComponent implements OnInit {
 
   constructor(private store: Store<fromHabits.State>) {
     //this.store.dispatch(new )
-    //this.habits$ = store.pipe(select(fromHabits.getAllHabits))
+    this.habits$ = store.pipe(select(fromHabits.getCollectionHabitIds));
   }
 
   ngOnInit() {
     this.store.dispatch(new HabitsPageActions.LoadHabits());
+
+    this.store.pipe(select(fromHabits.getCollectionHabitIds)).subscribe(res => { debugger; console.log(res);
+    } );
   }
 }

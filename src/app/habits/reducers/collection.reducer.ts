@@ -2,17 +2,18 @@ import {
     HabitsPageActions,
     CollectionApiActions,
   } from '@howl/habits/actions';
+import { Habit } from '../models/habit';
   
   export interface State {
     loaded: boolean;
     loading: boolean;
-    ids: string[];
+    habits: Habit[];
   }
   
   const initialState: State = {
     loaded: false,
     loading: false,
-    ids: [],
+    habits: [],
   };
   
   export function reducer(
@@ -27,19 +28,26 @@ import {
         return {
           loaded: true,
           loading: false,
-          ids: action.payload.map(Habit => Habit.id.toString()),
+          habits: action.payload
+        };
+      }
+
+      case HabitsPageActions.HabitsPageActionTypes.AddHabits: {
+        return {
+          ...state,
+          habits: [...state.habits, ...action.payload],
         };
       }
   
       case CollectionApiActions.CollectionApiActionTypes.AddHabitSuccess:
       case CollectionApiActions.CollectionApiActionTypes.RemoveHabitFailure: {
-        if (state.ids.indexOf(action.payload.id.toString()) > -1) {
+        if (state.habits.indexOf(action.payload) > -1) {
           return state;
         }
   
         return {
           ...state,
-          ids: [...state.ids, action.payload.id.toString()],
+          habits: [...state.habits, action.payload],
         };
       }
   
@@ -47,7 +55,7 @@ import {
       case CollectionApiActions.CollectionApiActionTypes.AddHabitFailure: {
         return {
           ...state,
-          ids: state.ids.filter(id => id !== action.payload.id.toString()),
+          habits: state.habits.filter(id => id !== action.payload),
         };
       }
   
@@ -61,5 +69,5 @@ import {
   
   export const getLoading = (state: State) => state.loading;
   
-  export const getIds = (state: State) => state.ids;
+  export const getHabits = (state: State) => state.habits;
   

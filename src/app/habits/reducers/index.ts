@@ -141,14 +141,14 @@ import {
   );
   export const getCollectionHabitIds = createSelector(
     getCollectionState,
-    fromCollection.getIds
+    fromCollection.getHabits
   );
   
   export const getHabitCollection = createSelector(
     getHabitEntities,
     getCollectionHabitIds,
-    (entities, ids) => {
-      return ids.map(id => entities[id]);
+    (entities, habits) => {
+      return habits;
     }
   );
   

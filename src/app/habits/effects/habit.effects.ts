@@ -46,13 +46,16 @@ export class HabitEffects {
   //     );
 
   @Effect()
-  loadCollection$: Observable<Action> = this.actions$.pipe(
+  loadCollection$ = this.actions$.pipe(
     ofType(HabitsPageActions.HabitsPageActionTypes.LoadHabits),
     switchMap(() => {
       return this.habitsHttpService.fetchAllHabits().pipe(
-        map((habits: Habit[]) => {
-          console.log(habits);
-          return new CollectionApiActions.LoadHabitsSuccess(habits);
+        map((response: {count:number, habits: Habit[]}) => {
+          console.log(response.habits);
+          //return //[ 
+          return  new HabitsPageActions.AddHabits(response.habits);
+            //new CollectionApiActions.LoadHabitsSuccess(response.habits)
+          //];
         }),
         catchError(error =>
           of(new CollectionApiActions.LoadHabitsFailure(error))

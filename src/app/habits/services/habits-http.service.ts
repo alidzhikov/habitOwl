@@ -15,22 +15,12 @@ export class HabitsHttpService {
     Authorization: "Bearer " + this.token
   });
 
-  constructor(public http: HttpClient, private store: Store<fromAuth.State>) {
-    this.store.pipe(select(fromAuth.getToken)).subscribe(token => {
-      if (token && token.length > 0) {
-        this.httpAuthHeader = new HttpHeaders({
-          "Content-type": "application/json",
-          Authorization: "Bearer " + token
-        });
-        this.token = token;
-      }
-    });
-  }
+  constructor(public http: HttpClient, private store: Store<fromAuth.State>) {}
 
   fetchAllHabits() {
     return this.getToken().pipe(
       mergeMap(() =>
-        this.http.get<Habit[]>(environment.dataURL + "/habits", {
+        this.http.get<{count:number, habits: Habit[]}>(environment.dataURL + "/habits", {
           headers: this.httpAuthHeader
         })
       )

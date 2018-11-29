@@ -1,11 +1,11 @@
 import { Habit } from "./habit";
 
-export class Activity {
+export class Act {
     constructor(
-        id:number,
+        id: number,
         habitId: number,
         habit: Habit | undefined,
         date: Date,
         fulfilled: boolean
-    ){}
+    ) {}
 }
