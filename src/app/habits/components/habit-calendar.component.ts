@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from "@angular/core";
 import * as moment from "moment";
+import { Habit } from "../models/habit";
+import { Act } from "../models/act";
 @Component({
   selector: "howl-calendar",
   templateUrl: "./howl-calendar.component.html"
@@ -35,9 +37,6 @@ export class HabitCalendarComponent implements OnInit {
   ngOnInit() {
     this.daysOfWeek = this.currentWeekDays();
     this.displayedColumns.push(this.displayedColumns.shift());
-    console.log(this.daysOfWeek[3]);
-    //console.log(this.displayedColumns);
-    console.log(this.isToday(this.daysOfWeek[4]));
   }
 
   currentWeekDays() {
@@ -52,9 +51,21 @@ export class HabitCalendarComponent implements OnInit {
     return days;
   }
 
-  isToday(date: Date) {
-    return moment()
-      .startOf("day")
-      .isSame(moment(date));
+  toggleFulfilled(ev: { date: Date; habit: Habit }) {
+    let act = new Act(ev.habit.id, ev.date);
+    if (ev.habit.acts) {
+      let actIndex = ev.habit.acts.findIndex(act =>
+        moment(act.date)
+          .startOf("day")
+          .isSame(moment(ev.date))
+      );
+      if (actIndex > -1) {
+        ev.habit.acts.splice(actIndex, 1);
+      } else {
+        ev.habit.acts.push(act);
+      }
+    } else {
+      ev.habit.acts = [act];
+    }
   }
 }

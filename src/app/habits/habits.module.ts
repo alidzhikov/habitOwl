@@ -16,6 +16,7 @@ import { ActivityCollectionComponent } from "./containers/activity-collection.co
 import { HabitsHttpService } from "./services/habits-http.service";
 import { HabitListComponent } from "./components/habit-list-item.component";
 import { HabitCalendarComponent } from "./components/habit-calendar.component";
+import { CalendarDateBtn } from "./components/calendar-date-btn.component";
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import { HabitCalendarComponent } from "./components/habit-calendar.component";
   declarations: [
     ActivityCollectionComponent,
     HabitListComponent,
-    HabitCalendarComponent
+    HabitCalendarComponent,
+    CalendarDateBtn
   ],
   providers: [HabitsHttpService]
 })

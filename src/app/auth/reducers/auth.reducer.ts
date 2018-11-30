@@ -1,5 +1,5 @@
-import { AuthApiActions, AuthActions } from '@howl/auth/actions';
-import { User } from '@howl/auth/models/user';
+import { AuthApiActions, AuthActions } from "@howl/auth/actions";
+import { User } from "@howl/auth/models/user";
 
 export interface State {
   user: User | null;
@@ -7,6 +7,7 @@ export interface State {
 
 export const initialState: State = {
   //user: localStorage.getItem('userDetails'),
+  user: null
 };
 
 export function reducer(
@@ -15,15 +16,21 @@ export function reducer(
 ): State {
   switch (action.type) {
     case AuthApiActions.AuthApiActionTypes.LoginSuccess: {
-      localStorage.setItem('userDetails', JSON.stringify({name: action.payload.user.email, token: action.payload.user.token}));
+      localStorage.setItem(
+        "userDetails",
+        JSON.stringify({
+          name: action.payload.user.email,
+          token: action.payload.user.token
+        })
+      );
       return {
         ...state,
-        user: action.payload.user,
+        user: action.payload.user
       };
     }
 
     case AuthActions.AuthActionTypes.Logout: {
-      localStorage.removeItem('userDetails');
+      localStorage.removeItem("userDetails");
       return initialState;
     }
 

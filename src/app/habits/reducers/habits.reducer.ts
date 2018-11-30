@@ -6,6 +6,49 @@ import {
   CollectionApiActions,
   HabitsPageActions
 } from "../actions";
+import { HabitCategory, HabitCategoryType } from "../models/habit-category";
+import {
+  DesiredFrequency,
+  DesiredFrequencyType
+} from "../models/desired-frequency";
+
+let habits = [
+  new Habit(
+    1,
+    "Workout",
+    "5 times a week",
+    new HabitCategory(HabitCategoryType.Health),
+    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek)
+  ),
+  new Habit(
+    2,
+    "Read",
+    "its nice",
+    new HabitCategory(HabitCategoryType.PersonalDevelopment),
+    new DesiredFrequency(DesiredFrequencyType.Everyday)
+  ),
+  new Habit(
+    3,
+    "Dance",
+    "5 times a week",
+    new HabitCategory(HabitCategoryType.Health),
+    new DesiredFrequency(DesiredFrequencyType.OnceAWeek)
+  ),
+  new Habit(
+    4,
+    "Jump",
+    "12 times a day",
+    new HabitCategory(HabitCategoryType.Work),
+    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek)
+  ),
+  new Habit(
+    5,
+    "Cry",
+    "0.2 times a week",
+    new HabitCategory(HabitCategoryType.Spirituality),
+    new DesiredFrequency(DesiredFrequencyType.OnceAMonth)
+  )
+];
 
 /**
  * @ngrx/entity provides a predefined interface for handling
@@ -15,7 +58,8 @@ import {
  * any additional interface properties.
  */
 export interface State extends EntityState<Habit> {
-  selectedHabitId: string | null;
+  ids: string[];
+  entities: { [id: string]: Habit };
 }
 
 /**
@@ -26,10 +70,7 @@ export interface State extends EntityState<Habit> {
  * a sortComparer option which is set to a compare
  * function if the records are to be sorted.
  */
-export const adapter: EntityAdapter<Habit> = createEntityAdapter<Habit>({
-  selectId: (habit: Habit) => habit.id,
-  sortComparer: false
-});
+export const adapter: EntityAdapter<Habit> = createEntityAdapter<Habit>(); //sort comparer false and sme other params
 
 /**
  * getInitialState returns the default initial state
@@ -37,7 +78,8 @@ export const adapter: EntityAdapter<Habit> = createEntityAdapter<Habit>({
  * additional properties can also be defined.
  */
 export const initialState: State = adapter.getInitialState({
-  selectedHabitId: null
+  ids: habits.map(habit => habit.id.toString()),
+  entities: habits
 });
 
 export function reducer(
@@ -60,7 +102,9 @@ export function reducer(
        */
       return adapter.addMany(action.payload, state);
     }
-
+    case HabitsPageActions.HabitsPageActionTypes.AddHabits: {
+      return adapter.addMany(action.payload, state);
+    }
     // case HabitActions.HabitActionTypes.LoadHabit: {
     //   /**
     //    * The addOne function provided by the created adapter
