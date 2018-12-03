@@ -7,7 +7,9 @@ import { Habit } from "../models/habit";
     <mat-card class="example-card">
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
-        <mat-card-title>{{ habit?.name }}</mat-card-title>
+        <mat-card-title [routerLink]="['/habits', habit?.id]">{{
+          habit?.name
+        }}</mat-card-title>
         <mat-card-subtitle>{{ habit?.comment }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>

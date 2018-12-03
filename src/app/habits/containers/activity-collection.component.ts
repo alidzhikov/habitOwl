@@ -4,6 +4,7 @@ import { Observable, from, of } from "rxjs";
 import { Store, select } from "@ngrx/store";
 import * as fromHabits from "@howl/habits/reducers";
 import { HabitCollectionActions } from "@howl/habits/actions";
+//import { map } from "rxjs/operators";
 
 @Component({
   selector: "howl-habits-list",
@@ -25,6 +26,7 @@ export class ActivityCollectionComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new HabitCollectionActions.LoadHabits());
+    //this.store.pipe(select(fromHabits.getAllHabits),map(res => res[0])).subscribe(res => console.log(res));
   }
 
   toggleFulfilled(ev: { date: Date; habit: Habit }) {

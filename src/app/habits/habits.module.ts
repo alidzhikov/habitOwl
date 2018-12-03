@@ -16,6 +16,7 @@ import { HabitsHttpService } from "./services/habits-http.service";
 import { ActivityCollectionComponent } from "./containers/activity-collection.component";
 import { HabitCalendarComponent } from "./components/habit-calendar.component";
 import { CalendarDateBtn } from "./components/calendar-date-btn.component";
+import { ViewHabitPageComponent } from "./containers/view-habit-page.component";
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { CalendarDateBtn } from "./components/calendar-date-btn.component";
   ],
   declarations: [
     ActivityCollectionComponent,
+    ViewHabitPageComponent,
     HabitCalendarComponent,
     CalendarDateBtn
   ],

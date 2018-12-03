@@ -35,7 +35,7 @@ export class CalendarDateBtn {
 
   isFulfilled(date: Date, habit: Habit) {
     let res = false;
-    if (!habit.acts) {
+    if (!habit || !habit.acts) {
       return res;
     }
     habit.acts.forEach(act => {
