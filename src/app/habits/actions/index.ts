@@ -1,13 +1,4 @@
-import * as HabitActions from './habit.actions';
-import * as HabitsApiActions from './habits-api.actions';
-import * as CollectionApiActions from './collection-api.actions';
-import * as HabitsPageActions from './habits-page.actions';
+import * as CollectionApiActions from "./collection-api.actions";
+import * as HabitCollectionActions from "./habit-collection.actions";
 
-export {
-  HabitActions,
-  HabitsApiActions,
-  CollectionApiActions,
-  HabitsPageActions,
-  //SelectedBookPageActions,
-  //ViewBookPageActions,
-};
+export { CollectionApiActions, HabitCollectionActions };

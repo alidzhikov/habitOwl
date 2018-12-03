@@ -3,15 +3,11 @@ import {
   createFeatureSelector,
   ActionReducerMap
 } from "@ngrx/store";
-//import * as fromSearch from '@howl/habits/reducers/search.reducer';
 import * as fromHabits from "@howl/habits/reducers/habits.reducer";
-import * as fromCollection from "@howl/habits/reducers/collection.reducer";
 import * as fromRoot from "@howl/reducers";
 
 export interface HabitsState {
-  //search: fromSearch.State;
   habits: fromHabits.State;
-  collection: fromCollection.State;
 }
 
 export interface State extends fromRoot.State {
@@ -19,11 +15,8 @@ export interface State extends fromRoot.State {
 }
 
 export const reducers: ActionReducerMap<HabitsState, any> = {
-  //search: fromSearch.reducer,
-  habits: fromHabits.reducer,
-  collection: fromCollection.reducer
+  habits: fromHabits.reducer
 };
-
 /**
  * A selector function is a map function factory. We pass it parameters and it
  * returns a function that maps from the larger state tree into a smaller
@@ -61,12 +54,6 @@ export const getHabitEntitiesState = createSelector(
   getHabitsState,
   state => state.habits
 );
-
-//   export const getSelectedHabitId = createSelector(
-//     getHabitEntitiesState,
-//     fromHabits.getSelectedId
-//   );
-
 /**
  * Adapters created with @ngrx/entity generate
  * commonly used selector functions including
@@ -82,87 +69,7 @@ export const {
   selectTotal: getTotalHabits
 } = fromHabits.adapter.getSelectors(getHabitEntitiesState);
 
-//   export const getSelectedHabit = createSelector(
-//     getHabitEntities,
-//     getSelectedHabitId,
-//     (entities, selectedId) => {
-//       return selectedId && entities[selectedId];
-//     }
-//   );
-
-/**
- * Just like with the Habits selectors, we also have to compose the search
- * reducer's and collection reducer's selectors.
- */
-//   export const getSearchState = createSelector(
-//     getHabitsState,
-//     (state: HabitsState) => state.search
-//   );
-
-//   export const getSearchHabitIds = createSelector(
-//     getSearchState,
-//     fromSearch.getIds
-//   );
-//   export const getSearchQuery = createSelector(
-//     getSearchState,
-//     fromSearch.getQuery
-//   );
-//   export const getSearchLoading = createSelector(
-//     getSearchState,
-//     fromSearch.getLoading
-//   );
-//   export const getSearchError = createSelector(
-//     getSearchState,
-//     fromSearch.getError
-//   );
-
-/**
- * Some selector functions create joins across parts of state. This selector
- * composes the search result IDs to return an array of Habits in the store.
- */
-//   export const getSearchResults = createSelector(
-//     getHabitEntities,
-//     //getSearchHabitIds,
-//     (Habits, /*searchIds*/) => {
-//       return searchIds.map(id => Habits[id]);
-//     }
-//   );
-
 export const getCollectionState = createSelector(
   getHabitsState,
-  (state: HabitsState) => state.collection
+  (state: HabitsState) => state.habits
 );
-
-// export const getAllHabits = createSelector(
-//   getHabitsState,
-//   (state: HabitsState) => state.collection
-// );
-
-export const getCollectionLoaded = createSelector(
-  getCollectionState,
-  fromCollection.getLoaded
-);
-export const getCollectionLoading = createSelector(
-  getCollectionState,
-  fromCollection.getLoading
-);
-export const getCollectionHabitIds = createSelector(
-  getCollectionState,
-  fromCollection.getHabits
-);
-
-export const getHabitCollection = createSelector(
-  getHabitEntities,
-  getCollectionHabitIds,
-  (entities, habits) => {
-    return habits;
-  }
-);
-
-//   export const isSelectedHabitInCollection = createSelector(
-//     getCollectionHabitIds,
-//     getSelectedHabitId,
-//     (ids, selected) => {
-//       return selected && ids.indexOf(selected) > -1;
-//     }
-//   );

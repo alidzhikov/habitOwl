@@ -1,42 +1,41 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import * as moment from "moment";
 import { Habit } from "../models/habit";
-import { Act } from "../models/act";
 @Component({
   selector: "howl-calendar",
-  templateUrl: "./howl-calendar.component.html"
+  template: `
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>{{ habit?.name }}</mat-card-title>
+        <mat-card-subtitle>{{ habit?.comment }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <howl-calendar-date-btn
+          *ngFor="let date of daysOfWeek"
+          [habit]="habit"
+          [date]="date"
+          (toggleFulfilled)="toggleFulfilledEmit($event)"
+        >
+        </howl-calendar-date-btn>
+      </mat-card-content>
+    </mat-card>
+  `
 })
 export class HabitCalendarComponent implements OnInit {
-  daysOfWeek;
   @Input() habit: any;
+  @Output() toggleFulfilledEmitter = new EventEmitter<{
+    date: Date;
+    habit: Habit;
+  }>();
+
+  daysOfWeek;
   today = moment()
     .startOf("day")
     .toDate();
-  dataSource = [
-    {
-      monday: 1,
-      tuesday: "Hydrogen",
-      wednesday: 1.0079,
-      thursday: "H",
-      friday: 34,
-      saturday: 45,
-      sunday: 34
-    },
-    { monday: 2, tuesday: "Helium", wednesday: 4.0026, thursday: "He" },
-    { monday: 3, tuesday: "Lithium", wednesday: 6.941, thursday: "Li" },
-    { monday: 4, tuesday: "Beryllium", wednesday: 9.0122, thursday: "Be" },
-    { monday: 5, tuesday: "Boron", wednesday: 10.811, thursday: "B" },
-    { monday: 6, tuesday: "Carbon", wednesday: 12.0107, thursday: "C" },
-    { monday: 7, tuesday: "Nitrogen", wednesday: 14.0067, thursday: "N" },
-    { monday: 8, tuesday: "Oxygen", wednesday: 15.9994, thursday: "O" },
-    { monday: 9, tuesday: "Fluorine", wednesday: 18.9984, thursday: "F" },
-    { monday: 10, tuesday: "Neon", wednesday: 20.1797, thursday: "Ne" }
-  ];
-  displayedColumns: string[] = moment.weekdays().map(s => s.toLowerCase());
 
   ngOnInit() {
     this.daysOfWeek = this.currentWeekDays();
-    this.displayedColumns.push(this.displayedColumns.shift());
   }
 
   currentWeekDays() {
@@ -51,21 +50,7 @@ export class HabitCalendarComponent implements OnInit {
     return days;
   }
 
-  toggleFulfilled(ev: { date: Date; habit: Habit }) {
-    let act = new Act(ev.habit.id, ev.date);
-    if (ev.habit.acts) {
-      let actIndex = ev.habit.acts.findIndex(act =>
-        moment(act.date)
-          .startOf("day")
-          .isSame(moment(ev.date))
-      );
-      if (actIndex > -1) {
-        ev.habit.acts.splice(actIndex, 1);
-      } else {
-        ev.habit.acts.push(act);
-      }
-    } else {
-      ev.habit.acts = [act];
-    }
+  toggleFulfilledEmit(ev: { date: Date; habit: Habit }) {
+    this.toggleFulfilledEmitter.emit(ev);
   }
 }

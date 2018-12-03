@@ -1,54 +1,8 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { Habit } from "../models/habit";
-import {
-  HabitsApiActions,
-  HabitActions,
-  CollectionApiActions,
-  HabitsPageActions
-} from "../actions";
-import { HabitCategory, HabitCategoryType } from "../models/habit-category";
-import {
-  DesiredFrequency,
-  DesiredFrequencyType
-} from "../models/desired-frequency";
-
-let habits = [
-  new Habit(
-    1,
-    "Workout",
-    "5 times a week",
-    new HabitCategory(HabitCategoryType.Health),
-    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek)
-  ),
-  new Habit(
-    2,
-    "Read",
-    "its nice",
-    new HabitCategory(HabitCategoryType.PersonalDevelopment),
-    new DesiredFrequency(DesiredFrequencyType.Everyday)
-  ),
-  new Habit(
-    3,
-    "Dance",
-    "5 times a week",
-    new HabitCategory(HabitCategoryType.Health),
-    new DesiredFrequency(DesiredFrequencyType.OnceAWeek)
-  ),
-  new Habit(
-    4,
-    "Jump",
-    "12 times a day",
-    new HabitCategory(HabitCategoryType.Work),
-    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek)
-  ),
-  new Habit(
-    5,
-    "Cry",
-    "0.2 times a week",
-    new HabitCategory(HabitCategoryType.Spirituality),
-    new DesiredFrequency(DesiredFrequencyType.OnceAMonth)
-  )
-];
+import { CollectionApiActions, HabitCollectionActions } from "../actions";
+import { Act } from "../models/act";
+import * as moment from "moment";
 
 /**
  * @ngrx/entity provides a predefined interface for handling
@@ -78,51 +32,46 @@ export const adapter: EntityAdapter<Habit> = createEntityAdapter<Habit>(); //sor
  * additional properties can also be defined.
  */
 export const initialState: State = adapter.getInitialState({
-  ids: habits.map(habit => habit.id.toString()),
-  entities: habits
+  ids: [],
+  entities: []
 });
 
 export function reducer(
   state = initialState,
   action:
-    | HabitsApiActions.HabitsApiActionsUnion
-    //| HabitActions.HabitActionsUnion
-    | HabitsPageActions.HabitsPageActionsUnion
+    | HabitCollectionActions.HabitCollectionActionsUnion
     | CollectionApiActions.CollectionApiActionsUnion
 ): State {
   switch (action.type) {
-    case HabitsApiActions.HabitsApiActionTypes.SearchSuccess:
     case CollectionApiActions.CollectionApiActionTypes.LoadHabitsSuccess: {
-      /**
-       * The addMany function provided by the created adapter
-       * adds many records to the entity dictionary
-       * and returns a new state including those records. If
-       * the collection is to be sorted, the adapter will
-       * sort each record upon entry into the sorted array.
-       */
       return adapter.addMany(action.payload, state);
     }
-    case HabitsPageActions.HabitsPageActionTypes.AddHabits: {
+    case HabitCollectionActions.HabitCollectionActionTypes.EditHabits: {
+      return this.adapter.upsertMany(action.payload);
+    }
+    case HabitCollectionActions.HabitCollectionActionTypes.AddHabits: {
       return adapter.addMany(action.payload, state);
     }
-    // case HabitActions.HabitActionTypes.LoadHabit: {
-    //   /**
-    //    * The addOne function provided by the created adapter
-    //    * adds one record to the entity dictionary
-    //    * and returns a new state including that records if it doesn't
-    //    * exist already. If the collection is to be sorted, the adapter will
-    //    * insert the new record into the sorted array.
-    //    */
-    //   return adapter.addOne(action.payload, state);
-    // }
-
-    // case HabitsPageActions.HabitsPageActionsUnion.SelectHabit: {
-    //   return {
-    //     ...state,
-    //     selectedHabitId: action.payload,
-    //   };
-    // }
-
+    case HabitCollectionActions.HabitCollectionActionTypes.AddOrEditAct: {
+      let copiedState = JSON.parse(JSON.stringify(state));
+      let act = new Act(action.payload.habit.id, action.payload.date);
+      let habit = copiedState.entities[action.payload.habit.id];
+      if (habit.acts) {
+        let actIndex = habit.acts.findIndex(act =>
+          moment(act.date)
+            .startOf("day")
+            .isSame(moment(action.payload.date))
+        );
+        if (actIndex > -1) {
+          habit.acts.splice(actIndex, 1);
+        } else {
+          habit.acts = [...habit.acts, act];
+        }
+      } else {
+        habit.acts = [act];
+      }
+      return copiedState;
+    }
     default: {
       return state;
     }

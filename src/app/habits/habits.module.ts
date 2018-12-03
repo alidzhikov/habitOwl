@@ -12,9 +12,8 @@ import { MaterialModule } from "@howl/material";
 import { reducers } from "@howl/habits/reducers";
 import { HabitsRoutingModule } from "@howl/habits/habits-routing.module";
 
-import { ActivityCollectionComponent } from "./containers/activity-collection.component";
 import { HabitsHttpService } from "./services/habits-http.service";
-import { HabitListComponent } from "./components/habit-list-item.component";
+import { ActivityCollectionComponent } from "./containers/activity-collection.component";
 import { HabitCalendarComponent } from "./components/habit-calendar.component";
 import { CalendarDateBtn } from "./components/calendar-date-btn.component";
 
@@ -45,7 +44,6 @@ import { CalendarDateBtn } from "./components/calendar-date-btn.component";
   ],
   declarations: [
     ActivityCollectionComponent,
-    HabitListComponent,
     HabitCalendarComponent,
     CalendarDateBtn
   ],

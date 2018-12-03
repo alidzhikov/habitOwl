@@ -1,4 +1,7 @@
-import { HabitsPageActions, CollectionApiActions } from "@howl/habits/actions";
+import {
+  HabitCollectionActions,
+  CollectionApiActions
+} from "@howl/habits/actions";
 import { Habit } from "../models/habit";
 
 export interface State {
@@ -16,7 +19,7 @@ const initialState: State = {
 export function reducer(
   state = initialState,
   action:
-    | HabitsPageActions.HabitsPageActionsUnion
+    | HabitCollectionActions.HabitCollectionActionsUnion
     | CollectionApiActions.CollectionApiActionsUnion
 ): State {
   switch (action.type) {

@@ -6,7 +6,10 @@ import { defer, Observable, of } from "rxjs";
 import { catchError, map, mergeMap, switchMap, toArray } from "rxjs/operators";
 
 import { Habit } from "@howl/habits/models/habit";
-import { HabitsPageActions, CollectionApiActions } from "@howl/habits/actions";
+import {
+  HabitCollectionActions,
+  CollectionApiActions
+} from "@howl/habits/actions";
 
 @Injectable()
 export class CollectionEffects {
@@ -20,38 +23,38 @@ export class CollectionEffects {
    * Wrapping the database open call in `defer` makes
    * effect easier to test.
    */
-  @Effect({ dispatch: false })
-  openDB$: Observable<any> = defer(() => {
-    return this.db.open("Habits_app");
-  });
+  // @Effect({ dispatch: false })
+  // openDB$: Observable<any> = defer(() => {
+  //   return this.db.open("Habits_app");
+  // });
 
-  @Effect()
-  addHabitToCollection$: Observable<Action> = this.actions$.pipe(
-    ofType<HabitsPageActions.AddHabit>(
-      HabitsPageActions.HabitsPageActionTypes.AddHabit
-    ),
-    map(action => action.payload),
-    mergeMap(Habit =>
-      this.db.insert("Habits", [Habit]).pipe(
-        map(() => new CollectionApiActions.AddHabitSuccess(Habit)),
-        catchError(() => of(new CollectionApiActions.AddHabitFailure(Habit)))
-      )
-    )
-  );
+  // @Effect()
+  // addHabitToCollection$: Observable<Action> = this.actions$.pipe(
+  //   ofType<HabitCollectionActions.AddHabit>(
+  //     HabitCollectionActions.HabitCollectionActionTypes.AddHabit
+  //   ),
+  //   map(action => action.payload),
+  //   mergeMap(Habit =>
+  //     this.db.insert("Habits", [Habit]).pipe(
+  //       map(() => new CollectionApiActions.AddHabitSuccess(Habit)),
+  //       catchError(() => of(new CollectionApiActions.AddHabitFailure(Habit)))
+  //     )
+  //   )
+  // );
 
-  @Effect()
-  removeHabitFromCollection$: Observable<Action> = this.actions$.pipe(
-    ofType<HabitsPageActions.RemoveHabit>(
-      HabitsPageActions.HabitsPageActionTypes.RemoveHabit
-    ),
-    map(action => action.payload),
-    mergeMap(Habit =>
-      this.db.executeWrite("Habits", "delete", [Habit.id]).pipe(
-        map(() => new CollectionApiActions.RemoveHabitSuccess(Habit)),
-        catchError(() => of(new CollectionApiActions.RemoveHabitFailure(Habit)))
-      )
-    )
-  );
+  // @Effect()
+  // removeHabitFromCollection$: Observable<Action> = this.actions$.pipe(
+  //   ofType<HabitCollectionActions.RemoveHabit>(
+  //     HabitCollectionActions.HabitCollectionActionTypes.RemoveHabit
+  //   ),
+  //   map(action => action.payload),
+  //   mergeMap(Habit =>
+  //     this.db.executeWrite("Habits", "delete", [Habit.id]).pipe(
+  //       map(() => new CollectionApiActions.RemoveHabitSuccess(Habit)),
+  //       catchError(() => of(new CollectionApiActions.RemoveHabitFailure(Habit)))
+  //     )
+  //   )
+  // );
 
   constructor(private actions$: Actions, private db: Database) {}
 }
