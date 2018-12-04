@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
-import { EMPTY as empty, of } from "rxjs";
+import { EMPTY as empty, of, Observable, defer } from "rxjs";
 import { map, switchMap, mergeMap } from "rxjs/operators";
 import { Habit } from "@howl/habits/models/habit";
 import {
@@ -19,6 +19,29 @@ import {
 @Injectable()
 export class HabitEffects {
   @Effect()
+  loadHabits$: Observable<any> = defer(() => {
+    return of(initialActs).pipe(
+      mergeMap((acts: Act[]) => {
+        return of(habits).pipe(
+          map(habits => {
+            acts.forEach(act =>
+              habits.forEach(habit => {
+                if (habit && act.habitId == habit.id) {
+                  habit.acts = [...habit.acts, act];
+                }
+              })
+            );
+            return habits;
+          })
+        );
+      }),
+      switchMap(habits => {
+        return of(new HabitCollectionActions.AddHabits(habits));
+      })
+    );
+  });
+
+  @Effect()
   loadCollection$ = this.actions$.pipe(
     ofType(HabitCollectionActions.HabitCollectionActionTypes.LoadHabits),
     mergeMap(() => of(initialActs)),
@@ -28,11 +51,7 @@ export class HabitEffects {
           acts.forEach(act =>
             habits.forEach(habit => {
               if (habit && act.habitId == habit.id) {
-                if (habit.acts) {
-                  habit.acts.push(act);
-                } else {
-                  habit.acts = [act];
-                }
+                habit.acts = [...habit.acts, act];
               }
             })
           );

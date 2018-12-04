@@ -14,9 +14,13 @@ import { HabitsRoutingModule } from "@howl/habits/habits-routing.module";
 
 import { HabitsHttpService } from "./services/habits-http.service";
 import { ActivityCollectionComponent } from "./containers/activity-collection.component";
-import { HabitCalendarComponent } from "./components/habit-calendar.component";
+import { HabitCalendarComponent } from "./components/calendar.component";
 import { CalendarDateBtn } from "./components/calendar-date-btn.component";
 import { ViewHabitPageComponent } from "./containers/view-habit-page.component";
+import { PeriodButtonComponent } from "./components/calendar-period-btn.component";
+import { AddHabitComponent } from "./components/add-habit.component";
+import { HabitDialogComponent } from "./components/add-habit-dialog.component";
+import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   imports: [
@@ -24,6 +28,7 @@ import { ViewHabitPageComponent } from "./containers/view-habit-page.component";
     MaterialModule,
     ComponentsModule,
     HabitsRoutingModule,
+    ReactiveFormsModule,
 
     /**
      * StoreModule.forFeature is used for composing state
@@ -47,8 +52,12 @@ import { ViewHabitPageComponent } from "./containers/view-habit-page.component";
     ActivityCollectionComponent,
     ViewHabitPageComponent,
     HabitCalendarComponent,
-    CalendarDateBtn
+    CalendarDateBtn,
+    PeriodButtonComponent,
+    AddHabitComponent,
+    HabitDialogComponent
   ],
-  providers: [HabitsHttpService]
+  providers: [HabitsHttpService],
+  bootstrap: [HabitDialogComponent]
 })
 export class HabitsModule {}

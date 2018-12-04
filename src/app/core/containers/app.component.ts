@@ -7,6 +7,7 @@ import * as fromAuth from "@howl/auth/reducers";
 import * as fromRoot from "@howl/reducers";
 import { LayoutActions } from "@howl/core/actions";
 import { User } from "@howl/auth/models/user";
+import { HabitCollectionActions } from "@howl/habits/actions";
 
 @Component({
   selector: "bc-app",

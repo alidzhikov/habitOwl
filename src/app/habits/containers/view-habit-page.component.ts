@@ -12,6 +12,7 @@ import { HabitCollectionActions } from "../actions";
   template: `
     <howl-calendar
       [habit]="habit$ | async"
+      [period]="'month'"
       (toggleFulfilledEmitter)="toggleFulfilled($event)"
     >
     </howl-calendar>

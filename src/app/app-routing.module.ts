@@ -4,7 +4,7 @@ import { AuthGuard } from "@howl/auth/services/auth-guard.service";
 import { NotFoundPageComponent } from "@howl/core/containers/not-found-page.component";
 
 export const routes: Routes = [
-  { path: "", redirectTo: "/books", pathMatch: "full" },
+  { path: "", redirectTo: "/habits", pathMatch: "full" },
   {
     path: "books",
     loadChildren: "@howl/books/books.module#BooksModule",

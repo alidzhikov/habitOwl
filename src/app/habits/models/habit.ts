@@ -9,7 +9,7 @@ export class Habit {
     public comment: string,
     public category: HabitCategory,
     public desiredFrequency: DesiredFrequency,
-    public acts?: Act[],
+    public acts: Act[] = [],
     public createdAt?: Date
   ) {}
 }
