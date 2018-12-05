@@ -21,6 +21,7 @@ import { PeriodButtonComponent } from "./components/calendar-period-btn.componen
 import { AddHabitComponent } from "./components/add-habit.component";
 import { HabitDialogComponent } from "./components/add-habit-dialog.component";
 import { ReactiveFormsModule } from "@angular/forms";
+import { BooleanDialogComponent } from "./components/boolean-dialog.component";
 
 @NgModule({
   imports: [
@@ -55,9 +56,10 @@ import { ReactiveFormsModule } from "@angular/forms";
     CalendarDateBtn,
     PeriodButtonComponent,
     AddHabitComponent,
-    HabitDialogComponent
+    HabitDialogComponent,
+    BooleanDialogComponent
   ],
   providers: [HabitsHttpService],
-  bootstrap: [HabitDialogComponent]
+  bootstrap: [HabitDialogComponent, BooleanDialogComponent]
 })
 export class HabitsModule {}

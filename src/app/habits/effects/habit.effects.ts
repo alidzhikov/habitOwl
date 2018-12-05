@@ -1,12 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { EMPTY as empty, of, Observable, defer } from "rxjs";
-import { map, switchMap, mergeMap } from "rxjs/operators";
+import { map, switchMap, mergeMap, tap, first } from "rxjs/operators";
 import { Habit } from "@howl/habits/models/habit";
-import {
-  HabitCollectionActions,
-  CollectionApiActions
-} from "@howl/habits/actions";
+import { HabitCollectionActions } from "@howl/habits/actions";
 import { HabitsHttpService } from "../services/habits-http.service";
 import { Act } from "../models/act";
 import * as moment from "moment";
@@ -15,6 +12,9 @@ import {
   DesiredFrequency,
   DesiredFrequencyType
 } from "../models/desired-frequency";
+import { Router } from "@angular/router";
+import { Store, select } from "@ngrx/store";
+import * as fromHabits from "@howl/habits/reducers";
 
 @Injectable()
 export class HabitEffects {
@@ -75,9 +75,48 @@ export class HabitEffects {
   //     of(new CollectionApiActions.LoadHabitsFailure(error))
   //   )
 
+  @Effect()
+  addHabit$ = this.actions$.pipe(
+    ofType(HabitCollectionActions.HabitCollectionActionTypes.AddHabitToDb),
+    mergeMap((action: any) =>
+      this.store.pipe(
+        select(fromHabits.getAllHabits),
+        first(),
+        map(habits => {
+          let habit = action.payload.clone();
+          habit.id = habits[habits.length - 1].id + 1;
+          return habit;
+        })
+      )
+    ),
+    switchMap(habit => {
+      return of(new HabitCollectionActions.AddHabit(habit));
+    })
+  );
+  @Effect()
+  editHabit$ = this.actions$.pipe(
+    ofType(HabitCollectionActions.HabitCollectionActionTypes.EditHabitDb),
+    map((action: any) => {
+      return action.payload;
+    }),
+    switchMap(habit => {
+      return of(new HabitCollectionActions.EditHabit(habit));
+    })
+  );
+
+  @Effect({ dispatch: false })
+  removeHabit$ = this.actions$.pipe(
+    ofType(HabitCollectionActions.HabitCollectionActionTypes.RemoveHabit),
+    map((action: any) => {
+      return action.payload;
+    }),
+    tap(() => this.router.navigate(["/"]))
+  );
   constructor(
     private actions$: Actions,
-    private habitsHttpService: HabitsHttpService
+    private habitsHttpService: HabitsHttpService,
+    private router: Router,
+    private store: Store<fromHabits.State>
   ) {}
 }
 
@@ -87,39 +126,53 @@ export class HabitEffects {
 
 const habits = [
   new Habit(
-    1,
     "Workout",
     "5 times a week",
     new HabitCategory(HabitCategoryType.Health),
-    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek)
+    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek),
+    [],
+    1
   ),
   new Habit(
-    2,
     "Read",
     "its nice",
     new HabitCategory(HabitCategoryType.PersonalDevelopment),
-    new DesiredFrequency(DesiredFrequencyType.Everyday)
+    new DesiredFrequency(DesiredFrequencyType.Everyday),
+    [],
+    2,
+    moment()
+      .subtract(26, "days")
+      .toDate()
   ),
   new Habit(
-    3,
     "Dance",
     "5 times a week",
     new HabitCategory(HabitCategoryType.Health),
-    new DesiredFrequency(DesiredFrequencyType.OnceAWeek)
+    new DesiredFrequency(DesiredFrequencyType.OnceAWeek),
+    [],
+    3,
+    moment()
+      .subtract(34, "days")
+      .toDate()
   ),
   new Habit(
-    4,
     "Jump",
     "12 times a day",
     new HabitCategory(HabitCategoryType.Work),
-    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek)
+    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek),
+    [],
+    4,
+    moment()
+      .subtract(140, "days")
+      .toDate()
   ),
   new Habit(
-    5,
     "Cry",
     "0.2 times a week",
     new HabitCategory(HabitCategoryType.Spirituality),
-    new DesiredFrequency(DesiredFrequencyType.OnceAMonth)
+    new DesiredFrequency(DesiredFrequencyType.OnceAMonth),
+    [],
+    5
   )
 ];
 const initialActs: Act[] = [

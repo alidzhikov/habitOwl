@@ -1,11 +1,17 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
-import { habitCategoriesDisplay } from "../models/habit-category";
-import { desiredFrequencyDisplay } from "../models/desired-frequency";
+import {
+  habitCategoriesDisplay,
+  HabitCategory
+} from "../models/habit-category";
+import {
+  desiredFrequencyDisplay,
+  DesiredFrequency
+} from "../models/desired-frequency";
+import { Habit } from "../models/habit";
 
 @Component({
-  selector: "howl-habit-dialog-dialog",
   template: `
     <h3>{{ data.addOrEdit }} Habit</h3>
     <form [formGroup]="habitForm">
@@ -76,6 +82,15 @@ import { desiredFrequencyDisplay } from "../models/desired-frequency";
         </mat-error>
       </mat-form-field>
     </form>
+    <button
+      mat-button
+      color="primary"
+      (click)="onSave()"
+      [disabled]="!habitForm.valid"
+    >
+      Save
+    </button>
+    <button mat-button color="warn" (click)="onCancel()">Cancel</button>
   `,
   styles: ["mat-form-field { display: block; }"]
 })
@@ -91,20 +106,43 @@ export class HabitDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    let habit = this.data.habit;
     this.habitForm = this.fb.group({
-      name: ["", Validators.required],
-      description: ["", Validators.maxLength(200)],
-      category: ["", Validators.required],
-      desiredFrequency: ["", Validators.required]
+      name: [habit ? habit.name : "", Validators.required],
+      description: [habit ? habit.comment : "", Validators.maxLength(200)],
+      category: [habit ? habit.category.text : "", Validators.required],
+      desiredFrequency: [
+        habit ? habit.desiredFrequency.text : "",
+        Validators.required
+      ]
     });
   }
 
-  onNoClick(): void {
+  onCancel(): void {
     this.dialogRef.close();
   }
 
-  onYesClick(): void {
-    this.dialogRef.close();
+  onSave(): void {
+    if (!this.habitForm.valid) {
+      return;
+    }
+    let habitToEdit: Habit | undefined = this.data.habit;
+    let categoryId = this.habitCategories.findIndex(
+      cat => cat == this.habitFormCategory.value
+    );
+    let desiredFrequencyId = this.desiredFrequencies.findIndex(
+      freq => freq == this.habitFormDesiredFrequency.value
+    );
+    let habit = new Habit(
+      this.habitFormName.value,
+      this.habitFormDescription.value,
+      new HabitCategory(categoryId),
+      new DesiredFrequency(desiredFrequencyId),
+      habitToEdit ? habitToEdit.acts : [],
+      habitToEdit ? habitToEdit.id : undefined,
+      habitToEdit ? habitToEdit.createdAt : undefined
+    );
+    this.dialogRef.close({ habit: habit });
   }
 
   get habitFormName() {

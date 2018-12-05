@@ -3,8 +3,7 @@ export class HowlEnum {
   constructor(public id: number, public arr: string[]) {
     this.text = this.arr[id];
   }
-
-  toString() {
-    return this.text;
-  }
 }
+HowlEnum.prototype.toString = function() {
+  return this.text;
+};

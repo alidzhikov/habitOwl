@@ -38,24 +38,27 @@ export const initialState: State = adapter.getInitialState({
 
 export function reducer(
   state = initialState,
-  action:
-    | HabitCollectionActions.HabitCollectionActionsUnion
-    | CollectionApiActions.CollectionApiActionsUnion
+  action: HabitCollectionActions.HabitCollectionActionsUnion
 ): State {
   switch (action.type) {
-    case CollectionApiActions.CollectionApiActionTypes.LoadHabitsSuccess: {
-      return adapter.addMany(action.payload, state);
+    case HabitCollectionActions.HabitCollectionActionTypes.EditHabit: {
+      return adapter.upsertOne(action.payload, state);
     }
     case HabitCollectionActions.HabitCollectionActionTypes.EditHabits: {
-      return this.adapter.upsertMany(action.payload);
+      return adapter.upsertMany(action.payload, state);
     }
     case HabitCollectionActions.HabitCollectionActionTypes.AddHabits: {
       return adapter.addMany(action.payload, state);
     }
+    case HabitCollectionActions.HabitCollectionActionTypes.AddHabit: {
+      return adapter.addOne(action.payload, state);
+    }
+    case HabitCollectionActions.HabitCollectionActionTypes.RemoveHabit: {
+      return adapter.removeOne(action.payload, state);
+    }
     case HabitCollectionActions.HabitCollectionActionTypes.AddOrEditAct: {
-      let copiedState = JSON.parse(JSON.stringify(state));
       let act = new Act(action.payload.habit.id, action.payload.date);
-      let habit = copiedState.entities[action.payload.habit.id];
+      let habit = state.entities[action.payload.habit.id].clone();
       if (habit.acts) {
         let actIndex = habit.acts.findIndex(act =>
           moment(act.date)
@@ -70,7 +73,7 @@ export function reducer(
       } else {
         habit.acts = [act];
       }
-      return copiedState;
+      return adapter.upsertOne(habit, state);
     }
     default: {
       return state;

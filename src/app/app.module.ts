@@ -1,24 +1,25 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { HttpClientModule } from "@angular/common/http";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { DBModule } from '@ngrx/db';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreModule } from "@ngrx/store";
+import { EffectsModule } from "@ngrx/effects";
+import { DBModule } from "@ngrx/db";
+import { StoreRouterConnectingModule } from "@ngrx/router-store";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 
-import { CoreModule } from '@howl/core/core.module';
-import { AuthModule } from '@howl/auth/auth.module';
+import { CoreModule } from "@howl/core/core.module";
+import { AuthModule } from "@howl/auth/auth.module";
 
-import { reducers, metaReducers } from '@howl/reducers';
-import { schema } from '@howl/db';
+import { reducers, metaReducers } from "@howl/reducers";
+import { schema } from "@howl/db";
 
-import { AppComponent } from '@howl/core/containers/app.component';
-import { environment } from '../environments/environment';
-import { AppRoutingModule } from '@howl/app-routing.module';
+import { AppComponent } from "@howl/core/containers/app.component";
+import { environment } from "../environments/environment";
+import { AppRoutingModule } from "@howl/app-routing.module";
+import { MaterialModule } from "./material";
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { AppRoutingModule } from '@howl/app-routing.module';
     HttpClientModule,
     AuthModule,
     AppRoutingModule,
+    MaterialModule,
 
     /**
      * StoreModule.forRoot is imported once in the root module, accepting a reducer
@@ -54,8 +56,8 @@ import { AppRoutingModule } from '@howl/app-routing.module';
      * See: https://github.com/zalmoxisus/redux-devtools-extension
      */
     StoreDevtoolsModule.instrument({
-      name: 'NgRx Book Store App',
-      logOnly: environment.production,
+      name: "NgRx Book Store App",
+      logOnly: environment.production
     }),
 
     /**
@@ -73,8 +75,8 @@ import { AppRoutingModule } from '@howl/app-routing.module';
      */
     DBModule.provideDB(schema),
 
-    CoreModule,
+    CoreModule
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

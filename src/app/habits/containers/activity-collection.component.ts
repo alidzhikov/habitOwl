@@ -38,7 +38,10 @@ export class ActivityCollectionComponent {
     let dialogRef = this.dialog.open(HabitDialogComponent, {
       data: { addOrEdit: "New" }
     });
-
-    dialogRef.afterClosed().subscribe(res => console.log(res));
+    dialogRef
+      .afterClosed()
+      .subscribe(res =>
+        this.store.dispatch(new HabitCollectionActions.AddHabitToDb(res.habit))
+      );
   }
 }
