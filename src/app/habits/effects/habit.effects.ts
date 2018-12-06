@@ -4,7 +4,7 @@ import { EMPTY as empty, of, Observable, defer } from "rxjs";
 import { map, switchMap, mergeMap, tap, first } from "rxjs/operators";
 import { Habit } from "@howl/habits/models/habit";
 import { HabitCollectionActions } from "@howl/habits/actions";
-import { HabitsHttpService } from "../services/habits-http.service";
+import { HabitHttpService } from "../services/habit-http.service";
 import { Act } from "../models/act";
 import * as moment from "moment";
 import { HabitCategory, HabitCategoryType } from "../models/habit-category";
@@ -114,7 +114,7 @@ export class HabitEffects {
   );
   constructor(
     private actions$: Actions,
-    private habitsHttpService: HabitsHttpService,
+    private habitsHttpService: HabitHttpService,
     private router: Router,
     private store: Store<fromHabits.State>
   ) {}

@@ -9,7 +9,8 @@ import { Component, EventEmitter, Output } from "@angular/core";
     <button mat-flat-button (click)="changePeriod.emit('right')">
       <i class="material-icons"> keyboard_arrow_right </i>
     </button>
-  `
+  `,
+  styles: ["button:focus {outline:0;}"]
 })
 export class PeriodButtonComponent {
   @Output() changePeriod = new EventEmitter<"left" | "right">();

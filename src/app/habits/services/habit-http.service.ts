@@ -8,7 +8,7 @@ import { map, mergeMap, tap } from "rxjs/operators";
 import { of } from "rxjs";
 
 @Injectable() //try with provided in root
-export class HabitsHttpService {
+export class HabitHttpService {
   token: string | undefined;
   httpAuthHeader = new HttpHeaders({
     "Content-type": "application/json",
@@ -20,9 +20,12 @@ export class HabitsHttpService {
   fetchAllHabits() {
     return this.getToken().pipe(
       mergeMap(() =>
-        this.http.get<{count:number, habits: Habit[]}>(environment.dataURL + "/habits", {
-          headers: this.httpAuthHeader
-        })
+        this.http.get<{ count: number; habits: Habit[] }>(
+          environment.dataURL + "/habits",
+          {
+            headers: this.httpAuthHeader
+          }
+        )
       )
     );
   }

@@ -22,7 +22,8 @@ import * as moment from "moment";
     ".today-date { border: 1px solid green; }",
     ".out-of-period-date { opacity: 0.4; }",
     ".fulfiled-date { background-color: #4f6991;border-width: 3px; }",
-    "button { border-radius: 50%; width: 64px; height: 64px; }"
+    "button { border-radius: 50%; width: 64px; height: 64px; }",
+    "button:focus {outline:0;}"
   ]
 })
 export class CalendarDateBtn {

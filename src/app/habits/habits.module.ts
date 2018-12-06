@@ -12,7 +12,7 @@ import { MaterialModule } from "@howl/material";
 import { reducers } from "@howl/habits/reducers";
 import { HabitsRoutingModule } from "@howl/habits/habits-routing.module";
 
-import { HabitsHttpService } from "./services/habits-http.service";
+import { HabitHttpService } from "./services/habit-http.service";
 import { ActivityCollectionComponent } from "./containers/activity-collection.component";
 import { HabitCalendarComponent } from "./components/calendar.component";
 import { CalendarDateBtn } from "./components/calendar-date-btn.component";
@@ -22,6 +22,8 @@ import { AddHabitComponent } from "./components/add-habit.component";
 import { HabitDialogComponent } from "./components/add-habit-dialog.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { BooleanDialogComponent } from "./components/boolean-dialog.component";
+import { HabitDetailsComponent } from "./components/habit-details.component";
+import { HabitService } from "./services/habit.service";
 
 @NgModule({
   imports: [
@@ -57,9 +59,10 @@ import { BooleanDialogComponent } from "./components/boolean-dialog.component";
     PeriodButtonComponent,
     AddHabitComponent,
     HabitDialogComponent,
-    BooleanDialogComponent
+    BooleanDialogComponent,
+    HabitDetailsComponent
   ],
-  providers: [HabitsHttpService],
+  providers: [HabitHttpService, HabitService],
   bootstrap: [HabitDialogComponent, BooleanDialogComponent]
 })
 export class HabitsModule {}

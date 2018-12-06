@@ -1,6 +1,7 @@
 import { DesiredFrequency } from "./desired-frequency";
 import { HabitCategory } from "./habit-category";
 import { Act } from "./act";
+import { Streak } from "./streak";
 
 export class Habit {
   constructor(
@@ -10,7 +11,8 @@ export class Habit {
     public desiredFrequency: DesiredFrequency,
     public acts: Act[] = [],
     public id?: number,
-    public createdAt?: Date
+    public createdAt?: Date,
+    public currentStreak?: Streak
   ) {}
 
   clone() {
@@ -23,9 +25,6 @@ export class Habit {
     hab.desiredFrequency.toString = function() {
       return this.text;
     };
-    console.log(hab.desiredFrequency.toString());
-    console.log(hab.category.toString());
-
     hab.clone = clone;
     hab.stringifyForDb = stringifyForDb;
     return hab;

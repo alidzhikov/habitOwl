@@ -8,6 +8,7 @@ import * as fromRoot from "@howl/reducers";
 import { LayoutActions } from "@howl/core/actions";
 import { User } from "@howl/auth/models/user";
 import { HabitCollectionActions } from "@howl/habits/actions";
+import { first } from "rxjs/operators";
 
 @Component({
   selector: "bc-app",
@@ -15,6 +16,9 @@ import { HabitCollectionActions } from "@howl/habits/actions";
   template: `
     <bc-layout>
       <bc-sidenav [open]="showSidenav$ | async" (closeMenu)="closeSidenav()">
+        <button mat-button (click)="closeSidenav()">
+          <i class="material-icons"> keyboard_arrow_left </i>
+        </button>
         <bc-nav-item
           (navigate)="closeSidenav()"
           *ngIf="(loggedIn$ | async)"
@@ -49,12 +53,16 @@ import { HabitCollectionActions } from "@howl/habits/actions";
         </bc-nav-item>
       </bc-sidenav>
       <bc-toolbar (openMenu)="openSidenav()">
-        Book Collection
+        <span id="title" [routerLink]="['/']"> Book Collection </span>
         {{ (user | async) ? "of " + (user | async).email : null }}
       </bc-toolbar>
       <router-outlet></router-outlet>
     </bc-layout>
-  `
+  `,
+  styles: ["#title{cursor:pointer}"],
+  host: {
+    "(document:click)": "onCloseSidenavListener($event)"
+  }
 })
 export class AppComponent {
   showSidenav$: Observable<boolean>;
@@ -80,7 +88,23 @@ export class AppComponent {
      */
     this.store.dispatch(new LayoutActions.CloseSidenav());
   }
-
+  onCloseSidenavListener(ev: any) {
+    this.showSidenav$.pipe(first()).subscribe(res => {
+      if (!res) {
+        return;
+      }
+      let close = false;
+      let objs = ev.path.map(e => e.localName);
+      objs.forEach(element => {
+        if (element == "bc-sidenav" || element == "bc-toolbar") {
+          close = true;
+        }
+      });
+      if (!close) {
+        this.closeSidenav();
+      }
+    });
+  }
   openSidenav() {
     this.store.dispatch(new LayoutActions.OpenSidenav());
   }

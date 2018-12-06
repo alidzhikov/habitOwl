@@ -19,33 +19,13 @@ import { BooleanDialogComponent } from "@howl/habits/components/boolean-dialog.c
       (toggleFulfilledEmitter)="toggleFulfilled($event)"
     >
     </howl-calendar>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>{{ (habit$ | async).name }}</mat-card-title>
-        <mat-card-subtitle> {{ (habit$ | async).comment }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p>
-          Category: {{ (habit$ | async).category }} <br />
-          Desired frequency: {{ (habit$ | async).desiredFrequency }}<br />
-          {{
-            (habit$ | async).createdAt
-              ? "Created at: " + ((habit$ | async).createdAt | date)
-              : ""
-          }}
-        </p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button (click)="openHabitDialog(habit$)">
-          <i class="material-icons">create</i>
-        </button>
-        <button mat-button (click)="removeHabit(habit$)">
-          <i class="material-icons">remove_circle</i>
-        </button>
-      </mat-card-actions>
-    </mat-card>
+    <howl-habit-details
+      [habit]="habit$ | async"
+      (openHabitDialog)="openHabitDialog($event)"
+      (removeHabit)="removeHabit($event)"
+    ></howl-habit-details>
   `,
-  styles: ["mat-card{max-width:500px;}"]
+  styles: ["mat-card{max-width:500px;display:inline-block;}"]
 })
 export class ViewHabitPageComponent {
   habit$: Observable<Habit>;
@@ -60,7 +40,7 @@ export class ViewHabitPageComponent {
       mergeMap(id =>
         this.store.pipe(
           select(fromHabits.getAllHabits),
-          tap(res => console.log(res)),
+          //tap(res => console.log(res)),
           map(habits => habits.find(habit => habit.id == id))
         )
       )
@@ -71,33 +51,31 @@ export class ViewHabitPageComponent {
     this.store.dispatch(new HabitCollectionActions.AddOrEditAct(ev));
   }
 
-  openHabitDialog() {
-    this.habit$.pipe(first()).subscribe(habit => {
-      let dialogRef = this.dialog.open(HabitDialogComponent, {
-        data: { addOrEdit: "Edit", habit: habit }
-      });
-      dialogRef.afterClosed().subscribe(res => {
-        if (res && res.habit) {
-          this.store.dispatch(
-            new HabitCollectionActions.EditHabitDb(res.habit)
-          );
-        }
-      });
+  openHabitDialog(habit: Habit) {
+    // this.habit$.pipe(first()).subscribe(habit => {
+    let dialogRef = this.dialog.open(HabitDialogComponent, {
+      data: { addOrEdit: "Edit", habit: habit }
     });
+    dialogRef.afterClosed().subscribe(res => {
+      if (res && res.habit) {
+        this.store.dispatch(new HabitCollectionActions.EditHabitDb(res.habit));
+      }
+    });
+    //});
   }
 
-  removeHabit() {
-    this.habit$.pipe(first()).subscribe(habit => {
-      let dialogRef = this.dialog.open(BooleanDialogComponent, {
-        data: {
-          text: "Are you sure you want to delete " + habit.name + " habit?"
-        }
-      });
-      dialogRef.afterClosed().subscribe(res => {
-        if (res && res.res && habit && habit.id) {
-          this.store.dispatch(new HabitCollectionActions.RemoveHabit(habit.id));
-        }
-      });
+  removeHabit(habit: Habit) {
+    //this.habit$.pipe(first()).subscribe(habit => {
+    let dialogRef = this.dialog.open(BooleanDialogComponent, {
+      data: {
+        text: "Are you sure you want to delete " + habit.name + " habit?"
+      }
     });
+    dialogRef.afterClosed().subscribe(res => {
+      if (res && res.res && habit && habit.id) {
+        this.store.dispatch(new HabitCollectionActions.RemoveHabit(habit.id));
+      }
+    });
+    //});
   }
 }
