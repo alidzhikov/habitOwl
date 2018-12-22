@@ -9,6 +9,7 @@ import { HabitCollectionActions } from "../actions";
 import { MatDialog } from "@angular/material";
 import { HabitDialogComponent } from "../components/add-habit-dialog.component";
 import { BooleanDialogComponent } from "@howl/habits/components/boolean-dialog.component";
+import { HabitService } from "../services/habit.service";
 
 @Component({
   selector: "howl-view-page",
@@ -33,22 +34,30 @@ export class ViewHabitPageComponent {
   constructor(
     private route: ActivatedRoute,
     private store: Store<fromHabits.State>,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private habitService: HabitService
   ) {
     this.habit$ = this.route.params.pipe(
-      map(params => +params["id"]),
+      map(params => params["id"]),
       mergeMap(id =>
         this.store.pipe(
           select(fromHabits.getAllHabits),
-          //tap(res => console.log(res)),
-          map(habits => habits.find(habit => habit.id == id))
+          tap(res => console.log(res)),
+          tap(res => console.log(id)),
+          map(habits => habits.find(habit => habit.id == id)),
+          tap(res => console.log(res)),
         )
       )
     );
   }
 
   toggleFulfilled(ev: { date: Date; habit: Habit }) {
-    this.store.dispatch(new HabitCollectionActions.AddOrEditAct(ev));
+    let actIndex = this.habitService.addOrRemoveAct(ev.date,ev.habit);
+    if(actIndex > -1){
+      this.store.dispatch(new HabitCollectionActions.RemoveActDb(ev.habit.acts[actIndex]));
+    }else{
+      this.store.dispatch(new HabitCollectionActions.AddActDb(ev));
+    }
   }
 
   openHabitDialog(habit: Habit) {

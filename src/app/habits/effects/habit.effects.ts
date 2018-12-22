@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { EMPTY as empty, of, Observable, defer } from "rxjs";
-import { map, switchMap, mergeMap, tap, first } from "rxjs/operators";
+import { map, switchMap, mergeMap, tap, first, catchError } from "rxjs/operators";
 import { Habit } from "@howl/habits/models/habit";
 import { HabitCollectionActions } from "@howl/habits/actions";
 import { HabitHttpService } from "../services/habit-http.service";
@@ -20,24 +20,27 @@ import * as fromHabits from "@howl/habits/reducers";
 export class HabitEffects {
   @Effect()
   loadHabits$: Observable<any> = defer(() => {
-    return of(initialActs).pipe(
-      mergeMap((acts: Act[]) => {
-        return of(habits).pipe(
-          map(habits => {
-            acts.forEach(act =>
-              habits.forEach(habit => {
-                if (habit && act.habitId == habit.id) {
-                  habit.acts = [...habit.acts, act];
-                }
-              })
-            );
-            return habits;
-          })
-        );
-      }),
-      switchMap(habits => {
-        return of(new HabitCollectionActions.AddHabits(habits));
-      })
+      return this.habitsHttpService.fetchAllActs().pipe(
+        mergeMap((acts: Act[]) => {
+          return this.habitsHttpService.fetchAllHabits().pipe(
+            map(habits => {
+              acts.forEach(act =>
+                habits.forEach(habit => {                  
+                  if (habit && act.habitId == habit.id) {
+                    habit.acts = [...habit.acts, act];
+                  }
+                })
+              );
+              return habits;
+            }),
+            // catchError(error =>
+            //   of(new CollectionApiActions.LoadHabitsFailure(error))
+            // )
+          );
+        }),
+      switchMap(habits => 
+        of(new HabitCollectionActions.AddHabits(habits))
+      )
     );
   });
 
@@ -63,42 +66,24 @@ export class HabitEffects {
       return of(new HabitCollectionActions.AddHabits(habits));
     })
   );
-  // return this.habitsHttpService.fetchAllHabits().pipe(
-  //   map((response: {count:number, habits: Habit[]}) => {
-  //     console.log(response.habits);
-  //     //return //[
-  //     return  new HabitCollectionActions.AddHabits(response.habits);
-  //       //new CollectionApiActions.LoadHabitsSuccess(response.habits)
-  //     //];
-  //   }),
-  //   catchError(error =>
-  //     of(new CollectionApiActions.LoadHabitsFailure(error))
-  //   )
 
   @Effect()
   addHabit$ = this.actions$.pipe(
     ofType(HabitCollectionActions.HabitCollectionActionTypes.AddHabitToDb),
     mergeMap((action: any) =>
-      this.store.pipe(
-        select(fromHabits.getAllHabits),
-        first(),
-        map(habits => {
-          let habit = action.payload.clone();
-          habit.id = habits[habits.length - 1].id + 1;
-          return habit;
-        })
-      )
+      this.habitsHttpService.createHabit(action.payload)
     ),
-    switchMap(habit => {
+    switchMap((habit:any) => {
       return of(new HabitCollectionActions.AddHabit(habit));
     })
   );
+
   @Effect()
   editHabit$ = this.actions$.pipe(
     ofType(HabitCollectionActions.HabitCollectionActionTypes.EditHabitDb),
-    map((action: any) => {
-      return action.payload;
-    }),
+    mergeMap((action: any) =>
+      this.habitsHttpService.updateHabit(action.payload)
+    ),
     switchMap(habit => {
       return of(new HabitCollectionActions.EditHabit(habit));
     })
@@ -107,10 +92,32 @@ export class HabitEffects {
   @Effect({ dispatch: false })
   removeHabit$ = this.actions$.pipe(
     ofType(HabitCollectionActions.HabitCollectionActionTypes.RemoveHabit),
-    map((action: any) => {
-      return action.payload;
-    }),
+    mergeMap((action: any) =>
+      this.habitsHttpService.deleteHabit(action.payload)
+    ),
     tap(() => this.router.navigate(["/"]))
+  );
+
+  @Effect()
+  addActDb$ = this.actions$.pipe(
+    ofType(HabitCollectionActions.HabitCollectionActionTypes.AddActDb),
+    mergeMap((action: any) =>
+      this.habitsHttpService.createAct(new Act(action.payload.habit.id,action.payload.date, undefined, new Date()))
+    ),
+    switchMap(act => {
+      return of(new HabitCollectionActions.AddAct(act));
+    })
+  );
+
+  @Effect()
+  removeAct$ = this.actions$.pipe(
+    ofType(HabitCollectionActions.HabitCollectionActionTypes.RemoveActDb),
+    mergeMap((action: any) =>
+      this.habitsHttpService.deleteAct(action.payload.id).pipe(map(() => action.payload))
+    ),
+    switchMap(act => 
+      of(new HabitCollectionActions.RemoveAct(act))
+    )
   );
   constructor(
     private actions$: Actions,

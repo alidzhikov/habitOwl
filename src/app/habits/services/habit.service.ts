@@ -3,7 +3,7 @@ import { Habit } from "../models/habit";
 import * as moment from "moment";
 import { Streak } from "../models/streak";
 import { Act } from "../models/act";
-
+import { HabitCollectionActions } from "@howl/habits/actions";
 @Injectable()
 export class HabitService {
   /**
@@ -17,7 +17,7 @@ export class HabitService {
    */
 
   getStreaks(habit: Habit): Streak[] | undefined {
-    if (!habit.acts || habit.acts.length < 1) {
+    if (!habit || !habit.acts || habit.acts.length < 1) {
       return;
     }
     let streak: Streak = {
@@ -92,6 +92,7 @@ export class HabitService {
   }
 
   getCompletionPercentage(habit: Habit) {
+    if(!habit){return}
     let daysSinceStarted = moment(habit.createdAt).diff(moment(), "days");
     let habitActs = this.filterActsByCurrentDate(this.getSortedActs(habit))
       .length;
@@ -124,5 +125,17 @@ export class HabitService {
         .startOf("day")
         .isSameOrBefore(moment().startOf("day"))
     );
+  }
+
+  addOrRemoveAct(date: Date, habit: Habit){
+    if (habit.acts) {
+      return habit.acts.findIndex(act =>
+        moment(act.date)
+          .startOf("day")
+          .isSame(moment(date))
+      );
+    } else {
+      return -1;
+    }
   }
 }

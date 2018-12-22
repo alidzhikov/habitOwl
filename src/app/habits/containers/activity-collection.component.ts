@@ -6,6 +6,7 @@ import * as fromHabits from "@howl/habits/reducers";
 import { HabitCollectionActions } from "@howl/habits/actions";
 import { MatDialog } from "@angular/material";
 import { HabitDialogComponent } from "../components/add-habit-dialog.component";
+import { HabitService } from "../services/habit.service";
 
 @Component({
   selector: "howl-habits-list",
@@ -25,13 +26,19 @@ export class ActivityCollectionComponent {
 
   constructor(
     private store: Store<fromHabits.State>,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private habitService: HabitService
   ) {
     this.habits$ = this.store.pipe(select(fromHabits.getAllHabits));
   }
 
   toggleFulfilled(ev: { date: Date; habit: Habit }) {
-    this.store.dispatch(new HabitCollectionActions.AddOrEditAct(ev));
+    let actIndex = this.habitService.addOrRemoveAct(ev.date,ev.habit);
+    if(actIndex > -1){
+      this.store.dispatch(new HabitCollectionActions.RemoveActDb(ev.habit.acts[actIndex]));
+    }else{
+      this.store.dispatch(new HabitCollectionActions.AddActDb(ev));
+    }
   }
 
   openHabitDialog() {

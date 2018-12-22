@@ -56,22 +56,20 @@ export function reducer(
     case HabitCollectionActions.HabitCollectionActionTypes.RemoveHabit: {
       return adapter.removeOne(action.payload, state);
     }
-    case HabitCollectionActions.HabitCollectionActionTypes.AddOrEditAct: {
-      let act = new Act(action.payload.habit.id, action.payload.date);
-      let habit = state.entities[action.payload.habit.id].clone();
+    case HabitCollectionActions.HabitCollectionActionTypes.AddAct: {
+      let habit = state.entities[action.payload.habitId].clone();
       if (habit.acts) {
-        let actIndex = habit.acts.findIndex(act =>
-          moment(act.date)
-            .startOf("day")
-            .isSame(moment(action.payload.date))
-        );
-        if (actIndex > -1) {
-          habit.acts.splice(actIndex, 1);
-        } else {
-          habit.acts = [...habit.acts, act];
-        }
+        habit.acts = [...habit.acts, action.payload];      
       } else {
-        habit.acts = [act];
+        habit.acts = [action.payload];
+      }
+      return adapter.upsertOne(habit, state);
+    }
+    case HabitCollectionActions.HabitCollectionActionTypes.RemoveAct: {
+      let habit = state.entities[action.payload.habitId].clone();
+      let actIndex = habit.acts.findIndex(act => act.id == action.payload.id);
+      if (habit.acts) {
+        habit.acts.splice(actIndex, 1);      
       }
       return adapter.upsertOne(habit, state);
     }

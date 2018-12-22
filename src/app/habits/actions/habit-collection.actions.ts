@@ -1,5 +1,6 @@
 import { Action } from "@ngrx/store";
 import { Habit } from "../models/habit";
+import { Act } from "../models/act";
 
 export enum HabitCollectionActionTypes {
   LoadHabits = "[Habit Collection] Load Habits",
@@ -10,7 +11,10 @@ export enum HabitCollectionActionTypes {
   EditHabitDb = "[Habit Collection] Edit Habit in db",
   RemoveHabit = "[Habit Collection] Remove Habit",
   EditHabits = "[Habit Collection] Edit Habits",
-  AddOrEditAct = "[Habit Collection] Add or edit Habits"
+  AddActDb = "[Habit Collection] Add Act to db",
+  AddAct = "[Habit Collection] Add Act",
+  RemoveActDb = "[Habit Collection] Remove Act from db",
+  RemoveAct = "[Habit Collection] Remove Act"
 }
 /**
  * Load Habits
@@ -78,12 +82,39 @@ export class EditHabits implements Action {
   constructor(public payload: Habit[]) {}
 }
 /**
- * Add or edit an act of a habit
+ * Add an act to a habit in a db
  */
-export class AddOrEditAct implements Action {
-  readonly type = HabitCollectionActionTypes.AddOrEditAct;
+export class AddActDb implements Action {
+  readonly type = HabitCollectionActionTypes.AddActDb;
 
   constructor(public payload: { date: Date; habit: Habit }) {}
+}
+
+/**
+ * Add an act to a habit
+ */
+export class AddAct implements Action {
+  readonly type = HabitCollectionActionTypes.AddAct;
+
+  constructor(public payload: Act) {}
+}
+
+/**
+ * Remove an act from a habit
+ */
+export class RemoveActDb implements Action {
+  readonly type = HabitCollectionActionTypes.RemoveActDb;
+
+  constructor(public payload: Act) {}
+}
+
+/**
+ * Remove an act from a habit
+ */
+export class RemoveAct implements Action {
+  readonly type = HabitCollectionActionTypes.RemoveAct;
+
+  constructor(public payload: Act) {}
 }
 
 export type HabitCollectionActionsUnion =
@@ -95,4 +126,7 @@ export type HabitCollectionActionsUnion =
   | EditHabitDb
   | RemoveHabit
   | EditHabits
-  | AddOrEditAct;
+  | AddActDb
+  | AddAct
+  | RemoveActDb
+  | RemoveAct;

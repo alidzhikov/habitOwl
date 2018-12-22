@@ -37,6 +37,7 @@ export class Habit {
       } else if (k === "desiredFrequency") {
         return v.id;
       }
+      return v;
     });
   }
 }

@@ -16,13 +16,6 @@ export function reducer(
 ): State {
   switch (action.type) {
     case AuthApiActions.AuthApiActionTypes.LoginSuccess: {
-      localStorage.setItem(
-        "userDetails",
-        JSON.stringify({
-          name: action.payload.user.email,
-          token: action.payload.user.token
-        })
-      );
       return {
         ...state,
         user: action.payload.user
@@ -30,7 +23,6 @@ export function reducer(
     }
 
     case AuthActions.AuthActionTypes.Logout: {
-      localStorage.removeItem("userDetails");
       return initialState;
     }
 
