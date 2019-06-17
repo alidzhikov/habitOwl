@@ -35,7 +35,7 @@ export const initialState: State = adapter.getInitialState({
   ids: [],
   entities: []
 });
-
+//https://stackblitz.com/edit/angular-nuiviw?file=src%2Fapp%2Fapp.component.css
 export function reducer(
   state = initialState,
   action: HabitCollectionActions.HabitCollectionActionsUnion
@@ -73,6 +73,11 @@ export function reducer(
       }
       return adapter.upsertOne(habit, state);
     }
+    case HabitCollectionActions.HabitCollectionActionTypes.DragSort: {
+      
+    }
+    //sort drag and drop
+    //sort from local storage or db 
     default: {
       return state;
     }

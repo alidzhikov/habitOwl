@@ -14,7 +14,9 @@ export enum HabitCollectionActionTypes {
   AddActDb = "[Habit Collection] Add Act to db",
   AddAct = "[Habit Collection] Add Act",
   RemoveActDb = "[Habit Collection] Remove Act from db",
-  RemoveAct = "[Habit Collection] Remove Act"
+  RemoveAct = "[Habit Collection] Remove Act",
+  DragSort = "[Habit Collection] Drag Sort",
+  ConfiguredSort = "[Habit Collection] Configured Sort"
 }
 /**
  * Load Habits
@@ -117,6 +119,26 @@ export class RemoveAct implements Action {
   constructor(public payload: Act) {}
 }
 
+
+/**
+ * Change sorting of 2 habits (from drag sort)
+ */
+export class DragSort implements Action {
+  readonly type = HabitCollectionActionTypes.DragSort;
+
+  constructor(public payload: number[]) {}
+}
+
+/**
+ * Sort habits according to the configured sorting (from local storage or db)
+ */
+export class ConfiguredSort implements Action {
+  readonly type = HabitCollectionActionTypes.ConfiguredSort;
+
+  constructor(public payload: number[]) {}
+}
+
+
 export type HabitCollectionActionsUnion =
   | LoadHabits
   | AddHabit
@@ -129,4 +151,6 @@ export type HabitCollectionActionsUnion =
   | AddActDb
   | AddAct
   | RemoveActDb
-  | RemoveAct;
+  | RemoveAct
+  | DragSort
+  | ConfiguredSort;

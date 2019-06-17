@@ -7,7 +7,7 @@ import { Streak } from "../models/streak";
 @Component({
   selector: "howl-habit-details",
   template: `
-    <mat-card class="col-xs-4">
+    <mat-card class="col-xs-4" *ngIf="_habit">
       <mat-card-header>
         <mat-card-title>{{ _habit?.name }}</mat-card-title>
         <mat-card-subtitle> {{ _habit?.comment }}</mat-card-subtitle>

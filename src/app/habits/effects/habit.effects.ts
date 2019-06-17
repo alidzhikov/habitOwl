@@ -82,7 +82,7 @@ export class HabitEffects {
   editHabit$ = this.actions$.pipe(
     ofType(HabitCollectionActions.HabitCollectionActionTypes.EditHabitDb),
     mergeMap((action: any) =>
-      this.habitsHttpService.updateHabit(action.payload)
+      this.habitsHttpService.updateHabit(action.payload).pipe(map(() => action.payload))
     ),
     switchMap(habit => {
       return of(new HabitCollectionActions.EditHabit(habit));

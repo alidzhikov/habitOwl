@@ -42,10 +42,7 @@ export class ViewHabitPageComponent {
       mergeMap(id =>
         this.store.pipe(
           select(fromHabits.getAllHabits),
-          tap(res => console.log(res)),
-          tap(res => console.log(id)),
-          map(habits => habits.find(habit => habit.id == id)),
-          tap(res => console.log(res)),
+          map(habits => habits.find(habit => habit.id == id))
         )
       )
     );
@@ -61,7 +58,6 @@ export class ViewHabitPageComponent {
   }
 
   openHabitDialog(habit: Habit) {
-    // this.habit$.pipe(first()).subscribe(habit => {
     let dialogRef = this.dialog.open(HabitDialogComponent, {
       data: { addOrEdit: "Edit", habit: habit }
     });
@@ -70,11 +66,9 @@ export class ViewHabitPageComponent {
         this.store.dispatch(new HabitCollectionActions.EditHabitDb(res.habit));
       }
     });
-    //});
   }
 
   removeHabit(habit: Habit) {
-    //this.habit$.pipe(first()).subscribe(habit => {
     let dialogRef = this.dialog.open(BooleanDialogComponent, {
       data: {
         text: "Are you sure you want to delete " + habit.name + " habit?"
@@ -85,6 +79,5 @@ export class ViewHabitPageComponent {
         this.store.dispatch(new HabitCollectionActions.RemoveHabit(habit.id));
       }
     });
-    //});
   }
 }

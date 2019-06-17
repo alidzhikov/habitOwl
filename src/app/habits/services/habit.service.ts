@@ -43,6 +43,7 @@ export class HabitService {
       } else {
         if (streak.count == 1) {
           streak.startDate = startDate;
+          streak.endDate = acc.date;
         }
         streaks.push(streak);
         streak = { count: 1, startDate: new Date(), endDate: new Date() };
@@ -114,7 +115,7 @@ export class HabitService {
           .isSame(
             moment()
               .startOf("day")
-              .add(1, "day")
+              .subtract(1, "day")
           )
     );
   }

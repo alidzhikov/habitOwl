@@ -6,7 +6,6 @@ export interface State {
 }
 
 export const initialState: State = {
-  //user: localStorage.getItem('userDetails'),
   user: null
 };
 

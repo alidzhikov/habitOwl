@@ -3,11 +3,12 @@ import * as moment from "moment";
 import { Habit } from "../models/habit";
 import { HabitService } from "../services/habit.service";
 import { Streak } from "../models/streak";
+import { habitCategoryColors } from "../models/habit-category";
 @Component({
   selector: "howl-calendar",
   template: `
-    <div class="calendar-wrapper col-xs-4">
-      <mat-card class="calendar-card">
+    <div class="calendar-wrapper col-xs-4" [ngStyle]="{'border-left': getCategoryColor(_habit)}">
+      <mat-card [ngClass]="{'calendar-card': !isReordering, 'calendar-card-reordering': isReordering }">
         <mat-card-header>
           <mat-card-title
             [routerLink]="['/habits', _habit?.id]"
@@ -21,13 +22,15 @@ import { Streak } from "../models/streak";
               }}</sup></span
             >
           </mat-card-title>
-          <mat-card-subtitle>{{ _habit?.desiredFrequency }}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="!isReordering">{{ _habit?.desiredFrequency }}</mat-card-subtitle>
           <howl-period-btn
-            (changePeriod)="changePeriod($event)"
+          *ngIf="!isReordering"
+          (changePeriod)="changePeriod($event)"
           ></howl-period-btn>
           {{ currentMonth }}
-        </mat-card-header>
-        <mat-card-content>
+          </mat-card-header>
+        <mat-card-content *ngIf="!isReordering">
+          <mat-card-subtitle *ngIf="_habit && _habit.comment && _habit.comment.length>0">{{ _habit?.comment }}</mat-card-subtitle>
           <howl-calendar-date-btn
             *ngFor="let date of daysOfPeriod; let i = index"
             [index]="i"
@@ -44,8 +47,9 @@ import { Streak } from "../models/streak";
   `,
   styles: [
     ".clickable {cursor: pointer;}",
-    ".calendar-card{max-width: 500px; margin-bottom:10px;}",
-    ".calendar-wrapper{display:inline-block}",
+    ".calendar-card{max-width: 500px; min-height:204px}",
+    ".calendar-card-reordering{min-width: 500px}",    
+    ".calendar-wrapper{display:inline-block;vertical-align: top;}",
     ".hot-count-icon{vertical-align: top;color:red; background-color: #fff3a5; border-radius: 50%; font-size: 18px;}",
     ".hot-count{font-size: 14px;}"
   ]
@@ -62,6 +66,7 @@ export class HabitCalendarComponent implements OnInit {
     date: Date;
     habit: Habit;
   }>();
+  @Input() isReordering: boolean;
   currentStreak: Streak | undefined;
   referenceDate = moment(); // defaults to today
   daysOfPeriod;
@@ -111,5 +116,10 @@ export class HabitCalendarComponent implements OnInit {
 
   get currentMonth() {
     return this.referenceDate.format("MMMM Y");
+  }
+
+  getCategoryColor(habit: Habit){
+    if(!habit || !habit.category){return;}
+    return '5px solid ' + habitCategoryColors[habit.category.id];
   }
 }

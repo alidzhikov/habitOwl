@@ -45,6 +45,7 @@ export class HabitHttpService {
   }
 
   createHabit(habit: Habit): Observable<Habit>{
+    debugger;
     return this.getToken().pipe(
       mergeMap(() =>
         this.http.post<{message:string, createdHabit:Habit}>(

@@ -24,6 +24,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { BooleanDialogComponent } from "./components/boolean-dialog.component";
 import { HabitDetailsComponent } from "./components/habit-details.component";
 import { HabitService } from "./services/habit.service";
+import { ReorderHabitComponent } from "./components/reorder-habit.component";
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import { HabitService } from "./services/habit.service";
     CalendarDateBtn,
     PeriodButtonComponent,
     AddHabitComponent,
+    ReorderHabitComponent,
     HabitDialogComponent,
     BooleanDialogComponent,
     HabitDetailsComponent

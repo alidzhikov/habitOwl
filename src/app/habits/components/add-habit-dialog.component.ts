@@ -133,6 +133,7 @@ export class HabitDialogComponent implements OnInit {
     let desiredFrequencyId = this.desiredFrequencies.findIndex(
       freq => freq == this.habitFormDesiredFrequency.value
     );
+    debugger;
     let habit = new Habit(
       this.habitFormName.value,
       this.habitFormDescription.value,
