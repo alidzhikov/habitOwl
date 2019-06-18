@@ -126,7 +126,7 @@ export class RemoveAct implements Action {
 export class DragSort implements Action {
   readonly type = HabitCollectionActionTypes.DragSort;
 
-  constructor(public payload: number[]) {}
+  constructor(public payload: string[]) {}
 }
 
 /**
@@ -135,7 +135,7 @@ export class DragSort implements Action {
 export class ConfiguredSort implements Action {
   readonly type = HabitCollectionActionTypes.ConfiguredSort;
 
-  constructor(public payload: number[]) {}
+  constructor(public payload: string[]) {}
 }
 
 

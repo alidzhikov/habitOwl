@@ -88,20 +88,20 @@ export class ActivityCollectionComponent {
 
   onReorderHabit(save: boolean | undefined){
     this.isReordering = !this.isReordering;
-    if(save){
-      let habitIDs = [];
-      this.habits$.pipe(map(habits => habits.map(habit => habit.id))).subscribe(habits => {
-        console.log(habits);
+    //if(save){
+      //let habitIDs = [];
+      // this.habits$.pipe(map(habits => habits.map(habit => habit.id))).subscribe(habits => {
+      //   console.log(habits);
 
-      });
+      // });
       //this.store.dispatch(new HabitCollectionActions.DragSort(this.habits$.pipe(map(habits => habits.map(habit => habit.id))))
-    }
+    //}
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    console.log(event);
     this.habits$.pipe(first()).subscribe(habits => {
       moveItemInArray(habits, event.previousIndex, event.currentIndex);
+      this.store.dispatch(new HabitCollectionActions.DragSort(habits.map(habit=> habit.id.toString())));
     });
   }
 }

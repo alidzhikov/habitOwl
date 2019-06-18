@@ -24,8 +24,20 @@ export class HabitEffects {
         mergeMap((acts: Act[]) => {
           return this.habitsHttpService.fetchAllHabits().pipe(
             map(habits => {
+              let sortedHabits = [];
+              let sortedIdsString: any = localStorage.getItem("habitIds");
+              let sortedIds = sortedIdsString ? sortedIdsString.split(',') : null;
+              habits.forEach((habit, index) => {
+                if(sortedIds){
+                  let habitToSort = habits.find(habitSearch => habitSearch.id == sortedIds[index]);
+                  sortedHabits[index] = habitToSort;
+                }
+              });
+              return sortedHabits.length > 0 ? sortedHabits : habits;
+            }),
+            map(habits => {
               acts.forEach(act =>
-                habits.forEach(habit => {                  
+                habits.forEach((habit,index) => {
                   if (habit && act.habitId == habit.id) {
                     habit.acts = [...habit.acts, act];
                   }
@@ -119,6 +131,13 @@ export class HabitEffects {
       of(new HabitCollectionActions.RemoveAct(act))
     )
   );
+
+  @Effect({ dispatch: false })
+  dragSort = this.actions$.pipe(
+    ofType(HabitCollectionActions.HabitCollectionActionTypes.DragSort),
+    tap((action: any) => localStorage.setItem("habitIds", action.payload))
+  );
+
   constructor(
     private actions$: Actions,
     private habitsHttpService: HabitHttpService,

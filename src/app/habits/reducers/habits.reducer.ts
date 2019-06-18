@@ -73,10 +73,6 @@ export function reducer(
       }
       return adapter.upsertOne(habit, state);
     }
-    case HabitCollectionActions.HabitCollectionActionTypes.DragSort: {
-      
-    }
-    //sort drag and drop
     //sort from local storage or db 
     default: {
       return state;
