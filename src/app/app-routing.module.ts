@@ -15,6 +15,11 @@ export const routes: Routes = [
     loadChildren: "@howl/habits/habits.module#HabitsModule",
     canActivate: [AuthGuard],
   },
+  {
+    path: "goals",
+    loadChildren: "@howl/goals/goals.module#GoalsModule",
+    canActivate: [AuthGuard],
+  },
   { path: "**", component: NotFoundPageComponent }
 ];
 

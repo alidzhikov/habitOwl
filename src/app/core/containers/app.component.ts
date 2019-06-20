@@ -45,6 +45,14 @@ import { first } from "rxjs/operators";
           ><!-- *ngIf="loggedIn$ | async" -->
           Habits
         </bc-nav-item>
+        <bc-nav-item
+          (navigate)="closeSidenav()"
+          routerLink="/goals"
+          icon="check"
+          hint="What is your vision?"
+          ><!-- *ngIf="loggedIn$ | async" -->
+          Goals
+        </bc-nav-item>
         <bc-nav-item (navigate)="closeSidenav()" *ngIf="!(loggedIn$ | async)">
           Sign In
         </bc-nav-item>

@@ -19,7 +19,7 @@ import { Habit } from "../models/habit";
         <input matInput placeholder="Name" formControlName="name" />
         <mat-error
           *ngIf="
-            habitFormName?.hasError('email') &&
+            habitFormName?.hasError('name') &&
             !habitFormName?.hasError('required')
           "
         >

@@ -1,8 +1,9 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
+import { DashboardComponent } from "./containers/dashboard.component";
 
 export const routes: Routes = [
-  //{ path: "", component: ActivityCollectionComponent }
+  { path: "", component: DashboardComponent }
 ];
 
 @NgModule({
