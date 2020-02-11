@@ -12,6 +12,7 @@ import {
   MatDialogModule,
   MatTableModule,
   MatSelectModule,
+  MatDatepickerModule,
 } from "@angular/material";
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
@@ -28,7 +29,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatDialogModule,
     MatTableModule,
     MatSelectModule,
-    DragDropModule
+    DragDropModule,
+    MatDatepickerModule
   ],
   exports: [
     MatInputModule,
@@ -42,7 +44,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatDialogModule,
     MatTableModule,
     MatSelectModule,
-    DragDropModule
+    DragDropModule,
+    MatDatepickerModule
   ]
 })
 export class MaterialModule {}

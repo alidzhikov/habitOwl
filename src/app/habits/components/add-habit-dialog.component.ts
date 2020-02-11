@@ -23,7 +23,7 @@ import { Habit } from "../models/habit";
         />
         <mat-error
           *ngIf="
-            habitFormName?.hasError('email') &&
+            habitFormName?.hasError('name') &&
             !habitFormName?.hasError('required')
           "
         >

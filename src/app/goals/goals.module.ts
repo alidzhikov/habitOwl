@@ -21,6 +21,10 @@ import { GoalsRoutingModule } from "@howl/goals/goals-routing.module";
 // import { AddHabitComponent } from "./components/add-habit.component";
 // import { HabitDialogComponent } from "./components/add-habit-dialog.component";
 import { ReactiveFormsModule } from "@angular/forms";
+import { GoalsHttpService } from "./services/goals-http.service";
+import { DashboardComponent } from "./containers/dashboard.component";
+import { AddGoalBtnComponent } from "./components/add-goal-btn.component";
+import { GoalDialogComponent } from "./components/goal-dialog.component";
 // import { BooleanDialogComponent } from "./components/boolean-dialog.component";
 // import { HabitDetailsComponent } from "./components/habit-details.component";
 // import { HabitService } from "./services/habit.service";
@@ -52,17 +56,11 @@ import { ReactiveFormsModule } from "@angular/forms";
     EffectsModule.forFeature([GoalEffects, CollectionEffects])
   ],
   declarations: [
-    // ActivityCollectionComponent,
-    // ViewHabitPageComponent,
-    // HabitCalendarComponent,
-    // CalendarDateBtn,
-    // PeriodButtonComponent,
-    // AddHabitComponent,
-    // HabitDialogComponent,
-    // BooleanDialogComponent,
-    // HabitDetailsComponent
-  ]
-  //providers: [GoalsHttpService, GoalsService],
-  //bootstrap: [GoalsDialogComponent, BooleanDialogComponent]
+    DashboardComponent,
+    AddGoalBtnComponent,
+    GoalDialogComponent
+  ],
+  providers: [GoalsHttpService/*, GoalsService*/],
+  bootstrap: [GoalDialogComponent, /*BooleanDialogComponent*/]
 })
 export class GoalsModule {}

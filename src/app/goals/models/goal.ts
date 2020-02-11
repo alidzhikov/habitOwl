@@ -5,6 +5,7 @@ export class Goal {
     public priority: number,
     public activity: { name: string }[],
     public sub: Goal[],
-    public id?: number
+    public id?: number,
+    public parentId?: number
   ) {}
 }
