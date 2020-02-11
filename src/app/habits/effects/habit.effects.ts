@@ -28,14 +28,18 @@ export class HabitEffects {
               let sortedIdsString: any = localStorage.getItem("habitIds");
               let sortedIds = sortedIdsString ? sortedIdsString.split(',') : null;
               habits.forEach((habit, index) => {
-                if(sortedIds){
+                if(!sortedIds) return;
                   let habitToSort = habits.find(habitSearch => habitSearch.id == sortedIds[index]);
-                  sortedHabits[index] = habitToSort;
-                }
+                  if(habitToSort){
+                    sortedHabits[index] = habitToSort;
+                  }else{
+                    sortedHabits[index] = habit;
+                  }
               });
               return sortedHabits.length > 0 ? sortedHabits : habits;
             }),
             map(habits => {
+              if(!acts){return habits;}
               acts.forEach(act =>
                 habits.forEach((habit,index) => {
                   if (habit && act.habitId == habit.id) {
@@ -59,9 +63,9 @@ export class HabitEffects {
   @Effect()
   loadCollection$ = this.actions$.pipe(
     ofType(HabitCollectionActions.HabitCollectionActionTypes.LoadHabits),
-    mergeMap(() => of(initialActs)),
+    mergeMap(() => of([])),
     mergeMap((acts: Act[]) => {
-      return of(habits).pipe(
+      return of([]).pipe(
         map(habits => {
           acts.forEach(act =>
             habits.forEach(habit => {
@@ -82,8 +86,10 @@ export class HabitEffects {
   @Effect()
   addHabit$ = this.actions$.pipe(
     ofType(HabitCollectionActions.HabitCollectionActionTypes.AddHabitToDb),
-    mergeMap((action: any) =>
-      this.habitsHttpService.createHabit(action.payload)
+    mergeMap((action: any) =>{
+      console.log('goo')
+      return this.habitsHttpService.createHabit(action.payload)
+    }
     ),
     switchMap((habit:any) => {
       return of(new HabitCollectionActions.AddHabit(habit));
@@ -114,7 +120,14 @@ export class HabitEffects {
   addActDb$ = this.actions$.pipe(
     ofType(HabitCollectionActions.HabitCollectionActionTypes.AddActDb),
     mergeMap((action: any) =>
-      this.habitsHttpService.createAct(new Act(action.payload.habit.id,action.payload.date, undefined, new Date()))
+      this.habitsHttpService.createAct(
+        new Act(
+          action.payload.habit.id,
+          action.payload.date, 
+          null,
+          undefined, 
+          new Date() 
+        ))
     ),
     switchMap(act => {
       return of(new HabitCollectionActions.AddAct(act));
@@ -150,169 +163,169 @@ export class HabitEffects {
  * Mock values for Habits and Acts
  */
 
-const habits = [
-  new Habit(
-    "Workout",
-    "5 times a week",
-    new HabitCategory(HabitCategoryType.Health),
-    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek),
-    [],
-    1
-  ),
-  new Habit(
-    "Read",
-    "its nice",
-    new HabitCategory(HabitCategoryType.PersonalDevelopment),
-    new DesiredFrequency(DesiredFrequencyType.Everyday),
-    [],
-    2,
-    moment()
-      .subtract(26, "days")
-      .toDate()
-  ),
-  new Habit(
-    "Dance",
-    "5 times a week",
-    new HabitCategory(HabitCategoryType.Health),
-    new DesiredFrequency(DesiredFrequencyType.OnceAWeek),
-    [],
-    3,
-    moment()
-      .subtract(34, "days")
-      .toDate()
-  ),
-  new Habit(
-    "Jump",
-    "12 times a day",
-    new HabitCategory(HabitCategoryType.Work),
-    new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek),
-    [],
-    4,
-    moment()
-      .subtract(140, "days")
-      .toDate()
-  ),
-  new Habit(
-    "Cry",
-    "0.2 times a week",
-    new HabitCategory(HabitCategoryType.Spirituality),
-    new DesiredFrequency(DesiredFrequencyType.OnceAMonth),
-    [],
-    5
-  )
-];
-const initialActs: Act[] = [
-  new Act(
-    1,
-    moment()
-      .subtract(2, "days")
-      .toDate(),
-    1
-  ),
-  new Act(
-    1,
-    moment()
-      .subtract(1, "days")
-      .toDate(),
-    2
-  ),
-  new Act(
-    1,
-    moment()
-      .subtract(4, "days")
-      .toDate(),
-    3
-  ),
-  new Act(
-    2,
-    moment()
-      .subtract(3, "days")
-      .toDate(),
-    4
-  ),
-  new Act(
-    2,
-    moment()
-      .subtract(1, "days")
-      .toDate(),
-    5
-  ),
-  new Act(
-    2,
-    moment()
-      .subtract(2, "days")
-      .toDate(),
-    6
-  ),
-  new Act(
-    3,
-    moment()
-      .subtract(3, "days")
-      .toDate(),
-    7
-  ),
-  new Act(
-    3,
-    moment()
-      .subtract(4, "days")
-      .toDate(),
-    8
-  ),
-  new Act(
-    1,
-    moment()
-      .add(2, "days")
-      .toDate(),
-    9
-  ),
-  new Act(
-    1,
-    moment()
-      .add(1, "days")
-      .toDate(),
-    10
-  ),
-  new Act(
-    1,
-    moment()
-      .add(4, "days")
-      .toDate(),
-    11
-  ),
-  new Act(
-    2,
-    moment()
-      .add(3, "days")
-      .toDate(),
-    12
-  ),
-  new Act(
-    2,
-    moment()
-      .add(1, "days")
-      .toDate(),
-    13
-  ),
-  new Act(
-    2,
-    moment()
-      .add(2, "days")
-      .toDate(),
-    14
-  ),
-  new Act(
-    3,
-    moment()
-      .add(3, "days")
-      .toDate(),
-    15
-  ),
-  new Act(
-    3,
-    moment()
-      .add(4, "days")
-      .toDate(),
-    16
-  ),
-  new Act(3, moment().toDate(), 17)
-];
+// const habits = [
+//   new Habit(
+//     "Workout",
+//     "5 times a week",
+//     new HabitCategory(HabitCategoryType.Health),
+//     new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek),
+//     [],
+//     1
+//   ),
+//   new Habit(
+//     "Read",
+//     "its nice",
+//     new HabitCategory(HabitCategoryType.PersonalDevelopment),
+//     new DesiredFrequency(DesiredFrequencyType.Everyday),
+//     [],
+//     2,
+//     moment()
+//       .subtract(26, "days")
+//       .toDate()
+//   ),
+//   new Habit(
+//     "Dance",
+//     "5 times a week",
+//     new HabitCategory(HabitCategoryType.Health),
+//     new DesiredFrequency(DesiredFrequencyType.OnceAWeek),
+//     [],
+//     3,
+//     moment()
+//       .subtract(34, "days")
+//       .toDate()
+//   ),
+//   new Habit(
+//     "Jump",
+//     "12 times a day",
+//     new HabitCategory(HabitCategoryType.Work),
+//     new DesiredFrequency(DesiredFrequencyType.ThreeTimesAWeek),
+//     [],
+//     4,
+//     moment()
+//       .subtract(140, "days")
+//       .toDate()
+//   ),
+//   new Habit(
+//     "Cry",
+//     "0.2 times a week",
+//     new HabitCategory(HabitCategoryType.Spirituality),
+//     new DesiredFrequency(DesiredFrequencyType.OnceAMonth),
+//     [],
+//     5
+//   )
+// ];
+// const initialActs: Act[] = [
+//   new Act(
+//     1,
+//     moment()
+//       .subtract(2, "days")
+//       .toDate(),
+//     1
+//   ),
+//   new Act(
+//     1,
+//     moment()
+//       .subtract(1, "days")
+//       .toDate(),
+//     2
+//   ),
+//   new Act(
+//     1,
+//     moment()
+//       .subtract(4, "days")
+//       .toDate(),
+//     3
+//   ),
+//   new Act(
+//     2,
+//     moment()
+//       .subtract(3, "days")
+//       .toDate(),
+//     4
+//   ),
+//   new Act(
+//     2,
+//     moment()
+//       .subtract(1, "days")
+//       .toDate(),
+//     5
+//   ),
+//   new Act(
+//     2,
+//     moment()
+//       .subtract(2, "days")
+//       .toDate(),
+//     6
+//   ),
+//   new Act(
+//     3,
+//     moment()
+//       .subtract(3, "days")
+//       .toDate(),
+//     7
+//   ),
+//   new Act(
+//     3,
+//     moment()
+//       .subtract(4, "days")
+//       .toDate(),
+//     8
+//   ),
+//   new Act(
+//     1,
+//     moment()
+//       .add(2, "days")
+//       .toDate(),
+//     9
+//   ),
+//   new Act(
+//     1,
+//     moment()
+//       .add(1, "days")
+//       .toDate(),
+//     10
+//   ),
+//   new Act(
+//     1,
+//     moment()
+//       .add(4, "days")
+//       .toDate(),
+//     11
+//   ),
+//   new Act(
+//     2,
+//     moment()
+//       .add(3, "days")
+//       .toDate(),
+//     12
+//   ),
+//   new Act(
+//     2,
+//     moment()
+//       .add(1, "days")
+//       .toDate(),
+//     13
+//   ),
+//   new Act(
+//     2,
+//     moment()
+//       .add(2, "days")
+//       .toDate(),
+//     14
+//   ),
+//   new Act(
+//     3,
+//     moment()
+//       .add(3, "days")
+//       .toDate(),
+//     15
+//   ),
+//   new Act(
+//     3,
+//     moment()
+//       .add(4, "days")
+//       .toDate(),
+//     16
+//   ),
+//   new Act(3, moment().toDate(), 17)
+// ];

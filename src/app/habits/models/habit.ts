@@ -10,9 +10,10 @@ export class Habit {
     public category: HabitCategory,
     public desiredFrequency: DesiredFrequency,
     public acts: Act[] = [],
+    public reward: number,
     public id?: number,
     public createdAt?: Date,
-    public currentStreak?: Streak
+    public currentStreak?: Streak,
   ) {}
 
   clone() {

@@ -81,8 +81,10 @@ export class ActivityCollectionComponent {
     });
     dialogRef
       .afterClosed()
-      .subscribe(res =>
+      .subscribe(res =>{
+        console.log(res.habit);
         this.store.dispatch(new HabitCollectionActions.AddHabitToDb(res.habit))
+      }
       );
   }
 
@@ -101,7 +103,7 @@ export class ActivityCollectionComponent {
   drop(event: CdkDragDrop<string[]>) {
     this.habits$.pipe(first()).subscribe(habits => {
       moveItemInArray(habits, event.previousIndex, event.currentIndex);
-      this.store.dispatch(new HabitCollectionActions.DragSort(habits.map(habit=> habit.id.toString())));
+      this.store.dispatch(new HabitCollectionActions.DragSort(habits.map(habit=> { console.log(habit.id); return habit.id.toString()})));
     });
   }
 }

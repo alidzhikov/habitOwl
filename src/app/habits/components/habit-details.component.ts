@@ -39,6 +39,7 @@ import { Streak } from "../models/streak";
           }}
           <br *ngIf="currentStreak" />
           Success rate: {{ completedPercentage | number: "1.0-2" }}%
+          <span *ngIf="_habit?.reward"><br/>Reward points on completion: {{ _habit.reward }}</span>
         </p>
       </mat-card-content>
       <mat-card-actions>

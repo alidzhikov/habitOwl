@@ -79,9 +79,8 @@ export class HabitService {
   }
 
   getSortedActs(habit: Habit, sortBy: "asc" | "desc" = "asc") {
-    if (!habit.acts) {
-      return [];
-    }
+    if (!habit.acts) return [];
+    console.log(habit);
     let acts = habit.acts.slice();
     let sortByMultiplier = sortBy == "asc" ? 1 : -1;
     acts.sort((a, b) =>

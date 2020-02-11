@@ -16,7 +16,11 @@ import { Habit } from "../models/habit";
     <h3>{{ data.addOrEdit }} Habit</h3>
     <form [formGroup]="habitForm">
       <mat-form-field class="example-full-width">
-        <input matInput placeholder="Name" formControlName="name" />
+        <input 
+          matInput 
+          placeholder="Name" 
+          formControlName="name" 
+        />
         <mat-error
           *ngIf="
             habitFormName?.hasError('email') &&
@@ -81,7 +85,26 @@ import { Habit } from "../models/habit";
           Desired Frequency is <strong>required</strong>
         </mat-error>
       </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="number"
+          placeholder="Reward"
+          formControlName="reward"
+        />
+        <mat-hint>You can use reward points to purchase something cool!</mat-hint>
+        <mat-error *ngIf="habitFormReward?.hasError('required')">
+          Desired Frequency is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="habitFormReward?.hasError('max')">
+          Reward can't be more than <strong>10</strong>
+        </mat-error>
+        <mat-error *ngIf="habitFormReward?.hasError('min')">
+          Reward can't be less than <strong>0</strong>
+        </mat-error>
+      </mat-form-field>
     </form>
+    <br/>
     <button
       mat-button
       color="primary"
@@ -114,7 +137,8 @@ export class HabitDialogComponent implements OnInit {
       desiredFrequency: [
         habit ? habit.desiredFrequency.text : "",
         Validators.required
-      ]
+      ],
+      reward: [habit ? habit.reward : 1, [Validators.required,Validators.max(10),Validators.min(0)]]
     });
   }
 
@@ -133,13 +157,13 @@ export class HabitDialogComponent implements OnInit {
     let desiredFrequencyId = this.desiredFrequencies.findIndex(
       freq => freq == this.habitFormDesiredFrequency.value
     );
-    debugger;
     let habit = new Habit(
       this.habitFormName.value,
       this.habitFormDescription.value,
       new HabitCategory(categoryId),
       new DesiredFrequency(desiredFrequencyId),
       habitToEdit ? habitToEdit.acts : [],
+      this.habitFormReward.value,
       habitToEdit ? habitToEdit.id : undefined,
       habitToEdit ? habitToEdit.createdAt : new Date()
     );
@@ -157,5 +181,8 @@ export class HabitDialogComponent implements OnInit {
   }
   get habitFormDesiredFrequency() {
     return this.habitForm.get("desiredFrequency");
+  }
+  get habitFormReward() {
+    return this.habitForm.get("reward");
   }
 }

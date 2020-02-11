@@ -13,12 +13,14 @@ import { HabitCategory, HabitCategoryType } from "../models/habit-category";
 @Injectable() //try with provided in root
 export class HabitHttpService {
   token: string | undefined;
-  headers = { headers: new HttpHeaders({
-    "Content-type": "application/json",
-    Authorization: "Bearer " + this.token
-  })};
+  headers = {
+    headers: new HttpHeaders({
+      "Content-type": "application/json",
+      Authorization: "Bearer " + this.token
+    })
+  };
 
-  constructor(public http: HttpClient, private store: Store<fromAuth.State>) {}
+  constructor(public http: HttpClient, private store: Store<fromAuth.State>) { }
 
   fetchAllHabits(): Observable<Habit[]> {
     return this.getToken().pipe(
@@ -44,11 +46,11 @@ export class HabitHttpService {
     );
   }
 
-  createHabit(habit: Habit): Observable<Habit>{
-    debugger;
+  createHabit(habit: Habit): Observable<Habit> {
+    console.log('created hhh');
     return this.getToken().pipe(
       mergeMap(() =>
-        this.http.post<{message:string, createdHabit:Habit}>(
+        this.http.post<{ message: string, createdHabit: Habit }>(
           environment.dataURL + "/habits",
           habit.stringifyForDb(),
           this.headers
@@ -58,10 +60,10 @@ export class HabitHttpService {
     );
   }
 
-  updateHabit(habit: Habit): Observable<Habit>{
+  updateHabit(habit: Habit): Observable<Habit> {
     return this.getToken().pipe(
       mergeMap(() =>
-        this.http.patch<{message: string, updatedHabit: Habit}>(
+        this.http.patch<{ message: string, updatedHabit: Habit }>(
           environment.dataURL + "/habits/" + habit.id,
           habit.stringifyForDb(),
           this.headers
@@ -74,7 +76,7 @@ export class HabitHttpService {
   deleteHabit(habitId: number) {
     return this.getToken().pipe(
       mergeMap(() =>
-        this.http.delete<{message: string}>(
+        this.http.delete<{ message: string }>(
           environment.dataURL + "/habits/" + habitId,
           this.headers
         )
@@ -82,10 +84,10 @@ export class HabitHttpService {
     );
   }
 
-  createAct(act: Act){
+  createAct(act: Act) {
     return this.getToken().pipe(
       mergeMap(() =>
-        this.http.post<{message:string, createdAct:Act}>(
+        this.http.post<{ message: string, createdAct: Act }>(
           environment.dataURL + "/acts",
           JSON.stringify(act),
           this.headers
@@ -98,7 +100,7 @@ export class HabitHttpService {
   deleteAct(actId: number) {
     return this.getToken().pipe(
       mergeMap(() =>
-        this.http.delete<{message: string}>(
+        this.http.delete<{ message: string }>(
           environment.dataURL + "/acts/" + actId,
           this.headers
         )
@@ -112,9 +114,9 @@ export class HabitHttpService {
         map(token => {
           token && token.length > 0
             ? (this.headers.headers = new HttpHeaders({
-                "Content-type": "application/json",
-                Authorization: "Bearer " + token
-              }))
+              "Content-type": "application/json",
+              Authorization: "Bearer " + token
+            }))
             : undefined;
           return token;
         })
@@ -123,19 +125,28 @@ export class HabitHttpService {
     return of(this.token);
   }
 
-  mapHabit(habit:any){
+  mapHabit(habit: any) {
+    console.log(habit);
+
     return new Habit(
       habit.name,
       habit.comment,
       new HabitCategory(habit.category),
       new DesiredFrequency(habit.desiredFrequency),
       [],
+      habit.reward,
       habit._id,
-      habit.createdAt 
+      habit.createdAt
     );
   }
 
-  mapAct(act: any){
-    return new Act(act.habitId, act.date, act._id, act.createdAt);
+  mapAct(act: any) {
+    return new Act(
+      act.habitId,
+      act.date,
+      act.performance,
+      act._id,
+      act.createdAt
+    );
   }
 }
