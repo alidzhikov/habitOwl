@@ -164,6 +164,7 @@ export class HabitDialogComponent implements OnInit {
       new DesiredFrequency(desiredFrequencyId),
       habitToEdit ? habitToEdit.acts : [],
       this.habitFormReward.value,
+      null,
       habitToEdit ? habitToEdit.id : undefined,
       habitToEdit ? habitToEdit.createdAt : new Date()
     );

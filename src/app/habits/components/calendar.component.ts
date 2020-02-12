@@ -22,7 +22,7 @@ import { habitCategoryColors } from "../models/habit-category";
               }}</sup></span
             >
           </mat-card-title>
-          <mat-card-subtitle *ngIf="!isReordering">{{ _habit?.desiredFrequency }}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="!isReordering">{{ _habit?.desiredFrequency }} {{ _habit?.reward }}pts.</mat-card-subtitle>
           <howl-period-btn
           *ngIf="!isReordering"
           (changePeriod)="changePeriod($event)"

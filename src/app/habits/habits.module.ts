@@ -25,6 +25,7 @@ import { BooleanDialogComponent } from "./components/boolean-dialog.component";
 import { HabitDetailsComponent } from "./components/habit-details.component";
 import { HabitService } from "./services/habit.service";
 import { ReorderHabitComponent } from "./components/reorder-habit.component";
+import { RateActDialogComponent } from "./components/rate-act-dialog.component";
 
 @NgModule({
   imports: [
@@ -62,9 +63,10 @@ import { ReorderHabitComponent } from "./components/reorder-habit.component";
     ReorderHabitComponent,
     HabitDialogComponent,
     BooleanDialogComponent,
-    HabitDetailsComponent
+    HabitDetailsComponent,
+    RateActDialogComponent
   ],
   providers: [HabitHttpService, HabitService],
-  bootstrap: [HabitDialogComponent, BooleanDialogComponent]
+  bootstrap: [HabitDialogComponent, BooleanDialogComponent,RateActDialogComponent]
 })
 export class HabitsModule {}

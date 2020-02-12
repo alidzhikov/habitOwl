@@ -124,7 +124,7 @@ export class HabitEffects {
         new Act(
           action.payload.habit.id,
           action.payload.date, 
-          null,
+          action.payload.performance,
           undefined, 
           new Date() 
         ))

@@ -63,6 +63,7 @@ export function reducer(
       } else {
         habit.acts = [action.payload];
       }
+      console.log(habit.acts);
       return adapter.upsertOne(habit, state);
     }
     case HabitCollectionActions.HabitCollectionActionTypes.RemoveAct: {

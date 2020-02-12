@@ -11,6 +11,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDropListGroup, CdkD
 
 import { first, map } from "rxjs/operators";
 import {ViewportRuler} from "@angular/cdk/overlay";
+import { RateActDialogComponent } from "../components/rate-act-dialog.component";
 
 @Component({
   selector: "howl-habits-list",
@@ -67,12 +68,23 @@ export class ActivityCollectionComponent {
   }
 
   toggleFulfilled(ev: { date: Date; habit: Habit }) {
-    let actIndex = this.habitService.addOrRemoveAct(ev.date,ev.habit);
-    if(actIndex > -1){
+    const actIndex = this.habitService.addOrRemoveAct(ev.date, ev.habit);
+    if (actIndex > -1) {
       this.store.dispatch(new HabitCollectionActions.RemoveActDb(ev.habit.acts[actIndex]));
-    }else{
-      this.store.dispatch(new HabitCollectionActions.AddActDb(ev));
-    }
+    } else {
+      const dialogRef = this.dialog.open(RateActDialogComponent, {
+        minWidth: '430px',
+        data: { habit: ev.habit }
+      });
+      dialogRef
+        .afterClosed()
+        .subscribe(res =>{
+          ev['performance'] = res.performance;
+          console.log(ev);
+          this.store.dispatch(new HabitCollectionActions.AddActDb(ev));
+        }
+      );
+    }    
   }
 
   openHabitDialog() {

@@ -11,6 +11,7 @@ export class Habit {
     public desiredFrequency: DesiredFrequency,
     public acts: Act[] = [],
     public reward: number,
+    public measure?: string,
     public id?: number,
     public createdAt?: Date,
     public currentStreak?: Streak,

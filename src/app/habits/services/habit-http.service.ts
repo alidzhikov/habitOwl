@@ -135,6 +135,7 @@ export class HabitHttpService {
       new DesiredFrequency(habit.desiredFrequency),
       [],
       habit.reward,
+      habit.measure,
       habit._id,
       habit.createdAt
     );
